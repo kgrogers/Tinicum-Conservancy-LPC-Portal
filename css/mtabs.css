@@ -1,0 +1,75 @@
+.mtabs{
+    width:96%;
+    height:auto;
+    margin:0 auto;
+}
+
+/* tab list item */
+.mtabs .mtabs-list{
+    list-style:none;
+    margin:0px;
+    padding:0px;
+}
+.mtabs .mtabs-list li{
+    width:125px;
+    float:left;
+    margin:0px;
+    margin-right:2px;
+    padding:10px 5px;
+    text-align: center;
+    background-color:cornflowerblue;
+    border-radius:3px;
+}
+.mtabs .mtabs-list li:hover{
+    cursor:pointer;
+}
+.mtabs .mtabs-list li a{
+    text-decoration: none;
+    color:white;
+}
+
+/* Tab content section */
+.mtabs .mtab{
+    display:none;
+    width:96%;
+    min-height:250px;
+    height:auto;
+    border-radius:3px;
+    padding:20px 15px;
+    /*background-color:lavender;*/
+    color:darkslategray;
+    clear:both;
+}
+.mtabs .mtab h3{
+    border-bottom:3px solid cornflowerblue;
+    letter-spacing:1px;
+    font-weight:normal;
+    padding:5px;
+}
+.mtabs .mtab p{
+    line-height:20px;
+    letter-spacing: 1px;
+}
+
+/* When active state */
+.active{
+    display:block !important;
+}
+.mtabs .mtabs-list li.active{
+    background-color:lavender !important;
+    color:black !important;
+}
+.active a{
+    color:black !important;
+}
+
+/* media query */
+@media screen and (max-width:360px){
+    .mtabs{
+        margin:0;
+        width:96%;
+    }
+    .mtabs .mtabs-list li{
+        width:80px;
+    }
+}

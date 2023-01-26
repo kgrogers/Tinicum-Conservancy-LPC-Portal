@@ -1,0 +1,248 @@
+@import url("/jqSuite460/themes/ui.jqgrid.css");
+@import url("/jqSuite460/themes/ui.multiselect.css");
+.ui-dialog-titlebar-close {
+	visibility: hidden;
+}
+#themepicker {
+	display: none;
+}
+label.l23, input.l2e {
+	display:block;
+}
+fieldset.l2e {
+	padding:0;
+	border:0;
+	margin-top:25px;
+}
+input.text {
+	margin-bottom:12px;
+	width:95%;
+	padding: .4em;
+}
+.ui-dialog .ui-state-error {
+	padding: .3em;
+}
+.ui-widget {
+	font-size: .75em;
+}
+#today caption {
+	border: 1px solid #A6C9E2; 
+	border-radius: 8px 8px 0px 0px;
+	background-color: #72AAD3;
+	color: #FFFFFF;
+	border-bottom: none;
+}
+#today {
+	border: 1px solid #A6C9E2;
+	border-spacing: 0px;
+	border-radius: 0 0 8px 8px;
+	border-collapse: seperate;
+}
+#today th {
+	border-top: none;
+	border: solid 1px #A6C9E2;
+}
+#today td {
+	border: 1px solid #A6C9E2;
+	background-color: #FEFFFF;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: small;
+	text-align: center;
+	padding: 3px;
+}
+.round-br {
+	border-radius: 0px 0px 8px 0px;
+}
+.round-bl {
+	border-radius: 0px 0px 0px 8px;
+}
+#header {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 10px;
+	background-image: url("/images/verizonLogo_163x37.png");
+	background-repeat: no-repeat;
+	background-position: right top;
+	width: 900px;
+	height: 35px;
+	/* border: solid 1px green; */
+}
+#header h1 {
+	position: relative;
+	top: -28px;
+	left: 204px;
+	font-family: Tahoma, Geneva, sans-serif;
+}
+#header h2 {
+	position: relative;
+	top: -132px;
+	left: 258px;
+	font-family: Tahoma, Geneva, sans-serif;
+	color: #EE6A5E;
+}
+#header h4 {
+	position: relative;
+	top: -74px;
+	left: 632px;
+	font-family: Tahoma, Geneva, sans-serif;
+}
+#header h5 {
+	position: relative;
+	top: -144px;
+	left: 281px;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: large;
+}
+#subheader {
+	position: relative;
+	top: -143px;
+	left: 90px;
+	/* border: solid 1px red; */
+}
+#schedule {
+	padding-top: 10px;
+	position: relative;
+	left: 20px;
+}
+.today {
+	width: 224px;
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: small;
+	background-color: #E0F0FD;
+	color: #2E6EAA;
+}
+#header span {
+	background-image: url('/images/menu_48x48.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	display: inline-block;
+	position: absolute;
+	left: 10px;
+	top: 20px;
+	width: 25px;
+	height: 25px;
+	background-size: 25px;
+	cursor: pointer;
+}
+#menu {
+	position: absolute;
+	top: 42px;
+	left: 10px;
+	width: auto;
+	height: auto;
+	border: 1px solid #d9d9d9;
+	box-shadow: 4px 4px 2px #cccccc;
+	background-color: white;
+	display: none;
+	z-index: 100;
+	padding-bottom: 5px;
+	padding-left: 5px;
+}
+.menutable td {
+	font-family: Tahoma, Geneva, sans-serif;
+	font-size: small;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	color: black;
+	cursor: default;
+}
+.menutable tr:first-child td {
+	cursor: pointer;
+}
+.menutable tr:first-child td:hover {
+	background-color: #e6e6e6;
+	color: #808080;
+}
+.always td:hover {
+	cursor: pointer;
+	background-color: #e6e6e6;
+	color: #808080;
+}
+
+img {
+	opacity: 0.4;
+	cursor: pointer;
+	margin: 5px;
+}
+.ui-dialog-titlebar-close {
+	visibility: hidden;
+}
+label.l23, input.l2e {
+	display:block;
+}
+fieldset.l2e {
+	padding:0;
+	border:0;
+	margin-top:25px;
+}
+input.text {
+	margin-bottom:12px;
+	width:95%;
+	padding: .4em;
+}
+.ui-dialog .ui-state-error {
+	padding: .3em;
+}
+.ui-front {
+/* Fix for autocomplete items showing up under the dialog box */
+	z-index: 951;
+}
+#mgrdiv, #optndiv, #repsdiv {
+	position: relative;
+	top: -73px;
+}
+#mgrdiv, #optndiv {
+	left: 200px;
+}
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	border-radius: 16px;
+	width: 16%;
+}
+
+/* The Close Button */
+.close {
+	color: #aaaaaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+.ui-menu {
+	width: 200px;
+}
+/* #login-message, #dialog-pending { */
+	/* font-size: 1.3em; */
+/* } */
+.ui-icon-background {
+	background-color: #ffffff;
+}
+#dialog-services, #dialog-login, #dialog-pending { display: none; }
+label.ui-button { width: 175px; }
+label.ui-corner-all, label.ui-corner-left, label.ui-corner-top, label.ui-corner-right, label.ui-corner-bottom { border-radius: 0px; }
+.ui-dialog { top: 100px !important; left: 120px !important }

@@ -1,0 +1,41 @@
+.datagrid-cell {
+	font-size: 13px;
+}
+.tc_lon {
+	border: 1px solid #E0ECFF;
+	border-collapse: collapse;
+}
+table.tc_lon {
+	height: 100%;
+    table-layout: fixed;
+}
+th.tc_lon {
+	background-color: #E0ECFF;
+	border: 1px solid white;
+}
+td.tc_lon {
+    width: 85%;
+}
+#loginform label {
+    display: block;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #7c8291;
+    margin-bottom: 3px;
+}
+#logindiv {
+    width: 300px;
+    padding: 15px 20px;
+    background: #f3f6fa;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
+    -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    -moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
+}
+#menu {
+    position: relative;
+    top: -34px;
+    cursor: pointer;
+}
