@@ -31,7 +31,13 @@
     $stmt->execute(array(':loid' => $lndonrID));
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($rows as $row) {
-        $contactnoteshtml .= "<tr id=\"cid_".$row['ContactNoteID']."\"><td>".$row['ContactDate']."</td><td>".$row['ContactedBy']."</td><td>".$row['ContactMode']."</td><td>".$row['ContactNote']."</td><td>".$row['NextStep']."</td></tr>";
+        $contactnoteshtml .= '<tr >
+                                <td id="'.$row['ContactNoteID'].'">'.$row['ContactDate'].'</td>
+                                <td>'.$row['ContactedBy'].'</td>
+                                <td>'.$row['ContactMode'].'</td>
+                                <td>'.$row['ContactNote'].'</td>
+                                <td>'.$row['NextStep'].'</td>
+                              </tr>';
     }
     if (isset($_POST['notesOnly'])) {
         print json_encode(array("contactnoteshtml"=>$contactnoteshtml));

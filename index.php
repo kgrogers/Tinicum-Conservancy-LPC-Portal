@@ -107,6 +107,7 @@
     <link href="dashboard.css" rel="stylesheet" id="dash_css" disabled="disabled">
     <link href="/bootstrap5/css/bootstrap-icons.css" rel="stylesheet">
     <link href="/bootstrap5/css/bootstrap-datepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/js/jquery.min.js"></script>
     <script src="/js/js.cookie.js"></script>
     <script>
@@ -294,6 +295,13 @@
                     $('#t-parcels').html(hretData['parcelshtml']);
                     $('#t-mailingaddress').html(hretData['mailaddrhtml']);
                     $('#newNote').show();
+                    $('#t-contactnotes tr td').hover(function() {
+                        if ($(this)[0]['id'] != '' && SIGNEDIN['permission'] == 'root') {
+                            // console.log($(this)[0]['id']);
+                            $(this).prop('title',"ContactNoteID: "+$(this)[0]['id']);
+                        }
+                    });
+
                 });
                 // console.log("LpcmemberID="+SIGNEDIN['LpcMemberID']);
                 $.ajax({
