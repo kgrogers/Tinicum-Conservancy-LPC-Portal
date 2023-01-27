@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/html/jqSuite/jq-config.php';
+require_once '/var/www/llpc.tinicumconservancy.org/public_html/jqSuite/jq-config.php';
 // include the jqGrid Class
 require_once ABSPATH."php/PHPSuito/jqGrid.php";
 // include the driver class

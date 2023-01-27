@@ -1,5 +1,5 @@
 <?php
-require_once '/var/www/html/jqSuite/jq-config.php';
+require_once '/var/www/llpc.tinicumconservancy.org/public_html/jqSuite/jq-config.php';
 // include the jqGrid Class
 require_once ABSPATH."php/PHPSuito/jqGrid.php";
 // include the driver class
@@ -63,7 +63,7 @@ $grid1->setUrl('tblContactNotes.php');
 
 // Change some property of the field(s)
 $grid1->setColProperty("ContactDate", array("label"=>"Contact Date","editrules"=>array("required"=>true),"formatter"=>"date","searchoptions"=>array("sopt"=>array("eq","ne","le","lt","ge","gt"))));
-$grid1->setColProperty("ContactNoteID", array("editable"=>false,"hidden"=>true));
+$grid1->setColProperty("ContactNoteID", array("editable"=>false,"hidden"=>false));
 $grid1->setColProperty("LandOwnerID", array("label"=>"LandOwner","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"editrules"=>array("required"=>true)));
 $grid1->setColProperty("ContactNote", array("label"=>"Contact Note","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 $grid1->setColProperty("ContactMode", array("lable"=>"Contact Mode","editrules"=>array("required"=>true)));
