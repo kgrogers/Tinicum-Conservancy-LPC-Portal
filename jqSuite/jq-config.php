@@ -8,7 +8,7 @@ define('DB_PASSWORD', 'aDfp4C2EsRpFt$s#zr'); // ...and password
 //define('DB_DATABASE', 'tinicum'); // ...and password
 define('DB_DATABASE', 'northwind'); // ...and password
 
-define('ABSPATH', '/var/www/lpc.tinicumconservancy.org/public_html/jqSuite/');
+define('ABSPATH', '/var/www/llpc.tinicumconservancy.org/public_html/jqSuite/');
 // Form settings
 $SERVER_HOST = "";        // the host name
 //$SELF_PATH = "/tinicum";    // the web path to the project without http
