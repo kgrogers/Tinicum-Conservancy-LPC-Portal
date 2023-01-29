@@ -13,7 +13,7 @@ $conn = new PDO(DB_DSN."tinicum",DB_USER,DB_PASSWORD);
 $conn->query("SET NAMES utf8");
 // Create the jqGrid instance
 $grid2 = new jqGridRender($conn);
-// $grid2->debug=true;
+$grid2->debug=true;
 $grid2->showError = true;
 // Write the SQL Query
 $grid2->SelectCommand = "
@@ -21,10 +21,7 @@ $grid2->SelectCommand = "
            lo.LandOwner,
            lo.LandOwnerNotes,
            ls.Status,
-           case
-               when lm.LastName = 'UNASSIGNED' then 'UNASSIGNED'
-               else concat(lm.FirstName, ' ', lm.LastName)
-           end CurrentlyAssignedTo,
+           concat('(',lt.LPC,') ',lm.FirstName, ' ', lm.LastName) CurrentlyAssignedTo,
            lo.LandOwnerAddress1,
            lo.LandOwnerAddress2,
            lo.LandOwnerCity,
@@ -35,9 +32,11 @@ $grid2->SelectCommand = "
            lo.AddressedTo
     from tblLandOwners lo,
          tblLpcMembers lm,
-         tblLandOwnerStatus ls
+         tblLandOwnerStatus ls,
+         tblLpcType lt
     where lo.CurrentlyAssignedTo = lm.LpcMemberID and
-          lo.Status = ls.StatusID";
+          lo.Status = ls.StatusID and
+          lm.LPC = lt.LpcID";
 
 // Set output format to json
 $grid2->dataType = 'json';
@@ -64,11 +63,11 @@ $grid2->setGridOptions(array(
 $grid2->setUrl('tblLandOwners.php');
 
 // Change some property of the field(s)
-$grid2->setColProperty("LandownerID", array("editable"=>false,"hidden"=>true));
+$grid2->setColProperty("LandownerID", array("editable"=>false,"hidden"=>false));
 $grid2->setColProperty("LandOwner", array("required"=>true));
-$grid2->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
+$grid2->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>false)));
 $grid2->setColProperty("Status", array("required"=>true));
-$grid2->setColProperty("CurrentlyAssignedTo", array("required"=>true));
+$grid2->setColProperty("CurrentlyAssignedTo", array("required"=>true,"editable"=>true));
 
 // Enable filter toolbar searching
 $grid2->toolbarfilter = true;
@@ -79,14 +78,23 @@ $grid2->setFilterOptions(array("searchOperators"=>true));
     1. Check Add form before submit and make sure LandOwner field isn't a duplicate.
 */
 $grid2->setSelect("Status", "SELECT StatusID, Status as CM FROM tblLandOwnerStatus ORDER BY 2", false, true, false, array(""=>""));
-$sql = "
-    SELECT distinct LpcMemberID,
-           case
-               when LastName = 'UNASSIGNED' then LastName
-               else concat(FirstName,' ',LastName)
-           end CB
-    FROM tblLpcMembers
-    ORDER BY 2";
+// $sql = "
+    // SELECT distinct LpcMemberID,
+           // case
+               // when LastName = 'UNASSIGNED' then LastName
+               // else concat(FirstName,' ',LastName)
+           // end CB
+    // FROM tblLpcMembers
+    // where MemberInactive = 0
+    // ORDER BY 2";
+    $sql = "
+        select o.LpcMemberID,
+               concat('(',t.LPC,') ',o.FirstName,' ',o.LastName) LpcMember
+        from tblLpcMembers o,
+             tblLpcType t
+        where o.MemberInactive = 0 and
+              o.LPC = t.LpcID
+        ORDER BY o.LastName";
 $grid2->setSelect("CurrentlyAssignedTo", $sql, false, true, false, array(""=>""));
 $grid2->navigator = true;
 $grid2->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));

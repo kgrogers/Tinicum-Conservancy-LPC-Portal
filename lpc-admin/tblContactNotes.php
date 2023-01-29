@@ -101,7 +101,7 @@ $sql = "
     ORDER BY 2";
 $grid1->setSelect("ContactedBy", $sql, false, true, false, array(""=>""));
 $grid1->navigator = true;
-$grid1->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
+$grid1->setNavOptions('navigator', array("excel"=>false,"add"=>false,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
 $grid1->setNavOptions('edit',array("height"=>"auto","dataheight"=>"auto","width"=>700,"closeAfterEdit"=>true));
 $grid1->setNavOptions('add',array("height"=>"auto","dataheight"=>"auto","width"=>"auto","closeAfterAdd"=>true));
 $grid1->setNavOptions('view',array("top"=>30,"left"=>30,"height"=>"auto","dataheight"=>"auto","width"=>600,"labelswidth"=>"20%"));
