@@ -13,7 +13,7 @@ $conn = new PDO(DB_DSN."tinicum",DB_USER,DB_PASSWORD);
 $conn->query("SET NAMES utf8");
 // Create the jqGrid instance
 $grid2 = new jqGridRender($conn);
-$grid2->debug=true;
+// $grid2->debug=true;
 $grid2->showError = true;
 // Write the SQL Query
 $grid2->SelectCommand = "
