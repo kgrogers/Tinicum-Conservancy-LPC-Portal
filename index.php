@@ -384,8 +384,16 @@
                         }
                         if (retData['loggedin'] == 'pwfail') {
                             // console.log("Password is wrong!");
-                            alert('Wrong password - Ty again');
+                            alert('Wrong userid or password - Did you already register? If so, try again.');
                             $('#InputPassword1').val('');
+                        }
+                        if (retData['loggedin'] == 'missingEmail') {
+                            alert("You don't have an email address registered with us - Please contact someone at Tinicum Conservancy for assistance.");
+                            window.open('thanks.html','_self');
+                        }
+                        if (retData['loggedin'] == 'inactive') {
+                            alert("You are not currsntly an active member - Please contact someone at Tinicum Conservancy for assistance.");
+                            window.open('thanks.html','_self');;
                         }
                     });
             });

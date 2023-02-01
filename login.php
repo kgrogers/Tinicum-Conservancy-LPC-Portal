@@ -48,6 +48,17 @@
     
     function register($email,$pwd) {
         global $db;
+        global $em;
+        global $mi;
+        
+        if (!in_array(strtolower($email),$em)) {
+            $_SESSION['loggedin'] = 'missingEmail';
+            $_SESSION['username'] = '';
+            $_SESSION['permission'] = '';
+            $_SESSION['LpcMemberID'] = '';
+            return $_SESSION;
+        }
+        
         $sql = "
             select m.FirstName,
                    m.LastName,
@@ -55,7 +66,8 @@
                    m.LpcMemberId LpcMemberID,
                    c.password,
                    c.username,
-                   c.permission
+                   c.permission,
+                   m.MemberInactive
             from tblLpcMembers m, tblMemberCreds c
             where m.LpcMemberID = c.LpcMemberID and
                   m.eMail = :email";
@@ -63,7 +75,12 @@
         $stmt->execute(array(":email"=>$email));
         $usrData = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if ($email == $usrData['eMail']) {
+        if ($usrData['MemberInactive'] == 1) {
+            $_SESSION['loggedin'] = 'inactive';
+            $_SESSION['username'] = '';
+            $_SESSION['permission'] = '';
+            $_SESSION['LpcMemberID'] = '';
+        } elseif ($email == $usrData['eMail']) {
             $userid = fivetwo($usrData['FirstName'], $usrData['LastName']);
             $sql = "
                 update tblMemberCreds
@@ -80,13 +97,13 @@
             $_SESSION['username'] = $userid;
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
-        } else {
+        } elseif ($usrData['eMail'] == '') {
             // Email not found
-            $_SESSION['loggedin'] = 'contact admin';
+            $_SESSION['loggedin'] = 'noEmail';
             $_SESSION['username'] = '';
             $_SESSION['permission'] = '';
             $_SESSION['LpcMemberID'] = '';
-        }            
+        }
         return $_SESSION;
     }
     
@@ -108,6 +125,24 @@
     require_once "sqlPDO.php";
     
     $db = opendb("MySQL","tinicum");
+    $fn = $em = $mi = $un = array();
+    
+    // Preload arrays for prechecks
+    $sql = "
+        select m.FirstName,
+               m.eMail,
+               m.LPC,
+               m.MemberInactive,
+               c.username
+        from tblLpcMembers m,
+             tblMemberCreds c
+        where m.LpcmemberID = c.LpcMemberID";
+    foreach ($db->query($sql,PDO::FETCH_ASSOC) as $row) {
+        $fn[] = $row['FirstName'];
+        $em[] = strtolower($row['eMail']);
+        $mi[] = $row['MemberInactive'];
+        $un[] = $row['username'];
+    }
 
     if ($userid == "") {
         $loggedin = register(strtolower($email),$pwd);
