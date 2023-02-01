@@ -17,7 +17,7 @@ $grid2 = new jqGridRender($conn);
 $grid2->showError = true;
 // Write the SQL Query
 $grid2->SelectCommand = "
-    select lo.LandownerID,
+    select lo.LandOwnerID,
            lo.LandOwner,
            lo.LandOwnerNotes,
            ls.Status,
