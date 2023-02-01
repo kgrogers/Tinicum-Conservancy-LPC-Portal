@@ -380,7 +380,23 @@
                             // $.cookie('TC_uname', retData['username'], {
                                 // expires: 30
                             // });
-                            location.reload();
+                            $.ajax({
+                                url: 'mailto.php',
+                                method: 'post',
+                                dataType: 'json',
+                                data: {
+                                    email: $('#InputEmail').val(),
+                                    fname: retData['FirstName']
+                                }
+                            })
+                            .always(function() {
+                                alert("An email was sent to you that has your username. Once you receieve it you should be able to log in");
+                                $('#regCheck').prop('checked', false);
+                                $('#InputEmail').val('');
+                                $('#InputPassword1').val('');
+                                $('#InputPassword2').val('');
+                                location.reload();
+                            });
                         }
                         if (retData['loggedin'] == 'pwfail') {
                             // console.log("Password is wrong!");
@@ -389,11 +405,13 @@
                         }
                         if (retData['loggedin'] == 'missingEmail') {
                             alert("You don't have an email address registered with us - Please contact someone at Tinicum Conservancy for assistance.");
+                            $('#regCheck').prop('checked', false);
                             window.open('thanks.html','_self');
                         }
                         if (retData['loggedin'] == 'inactive') {
                             alert("You are not currsntly an active member - Please contact someone at Tinicum Conservancy for assistance.");
-                            window.open('thanks.html','_self');;
+                            $('#regCheck').prop('checked', false);
+                            window.open('thanks.html','_self');
                         }
                     });
             });
@@ -509,8 +527,8 @@
                 <label class="form-check-label" for="regCheck">Register</label>
             </div>
             <div class="form-check form-check-inline" id="forgotup">
-                <input class="form-check-input" type="checkbox" value="" id="forgotCheck">
-                <label class="form-check-label" for="forgotCheck">Forgot userid/pwd</label>
+                <input class="form-check-input" type="checkbox" value="" id="forgotCheck" disabled>
+                <label class="form-check-label" for="forgotCheck" title="Future feature">Forgot userid/pwd</label>
             </div>
 
         </form>

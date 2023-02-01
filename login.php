@@ -50,6 +50,7 @@
         global $db;
         global $em;
         global $mi;
+        global $fn;
         
         if (!in_array(strtolower($email),$em)) {
             $_SESSION['loggedin'] = 'missingEmail';
@@ -97,12 +98,7 @@
             $_SESSION['username'] = $userid;
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
-        } elseif ($usrData['eMail'] == '') {
-            // Email not found
-            $_SESSION['loggedin'] = 'noEmail';
-            $_SESSION['username'] = '';
-            $_SESSION['permission'] = '';
-            $_SESSION['LpcMemberID'] = '';
+            $_SESSION['FirstName'] = $fn[array_search(strtolower($email),$em)];
         }
         return $_SESSION;
     }
