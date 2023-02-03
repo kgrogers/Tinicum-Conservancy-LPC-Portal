@@ -33,7 +33,8 @@ $grid4->SelectCommand = "
            p.ParcelState,
            p.ParcelZip
     from tblParcels p,
-         tblLandOwners l,tblWatersheds w
+         tblLandOwners l,
+         tblWatersheds w
     where p.LandOwnerID = l.LandOwnerID and
           p.WatershedID = w.WatershedID";
 
@@ -76,7 +77,7 @@ $grid4->toolbarfilter = true;
 // Enable operation search
 $grid4->setFilterOptions(array("searchOperators"=>true));
 
-// $grid4->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false, array(""=>"Select Mode..."));
+$grid4->setSelect("WatershedID", "SELECT ws.WatershedID, ws.Watershed FROM tblWatersheds ws ORDER BY 2", false, true, false);
 // $grid4->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
 // $sql = "
     // SELECT distinct LpcMemberID,

@@ -4,8 +4,6 @@ require_once '/var/www/llpc.tinicumconservancy.org/public_html/jqSuite/jq-config
 require_once ABSPATH."php/PHPSuito/jqGrid.php";
 // include the driver class
 require_once ABSPATH."php/PHPSuito/DBdrivers/jqGridPdo.php";
-// include the datepicker
-// require_once ABSPATH."php/jqCalendar.php";
 
 // Connection to the server
 $conn = new PDO(DB_DSN."tinicum",DB_USER,DB_PASSWORD);
@@ -22,23 +20,26 @@ $grid3->SelectCommand = "
            m.LastName,
            m.Phone,
            m.eMail,
-           t.LpcDescription,
+           t.LpcDescription as LPC,
            m.Notes,
            case
                when MemberInactive = 0 then 'Active'
                else 'Inactive'
-           end MemberInactive
+           end MemberInactive,
+           m.username,
+           m.password,
+           m.permission
     from tblLpcMembers m,
          tblLpcType t
     where m.LPC = t.LpcID";
 
 // Set output format to json
 $grid3->dataType = 'json';
-$grid3->table='tblLpcmembers';
+$grid3->table='tblLpcMembers';
 $grid3->setPrimaryKeyID('LpcMemberID');
+$grid3->serialKey = true;
 // Let the grid create the model
 $grid3->setColModel();
-
 
 // Set some grid options
 $grid3->setGridOptions(array(
@@ -57,31 +58,30 @@ $grid3->setGridOptions(array(
 $grid3->setUrl('tblLpcMembers.php');
 
 // Change some property of the field(s)
-$grid3->setColProperty("LpcMemberID", array("editable"=>false,"hidden"=>true));
+$grid3->setColProperty("LpcMemberID", array("key"=>true,"editable"=>false,"hidden"=>true));
 $grid3->setColProperty("FirstName", array("label"=>"First Name", "required"=>true));
 $grid3->setColProperty("LastName", array("label"=>"Last Name", "required"=>true));
 $grid3->setColProperty("Phone", array("required"=>true));
 $grid3->setColProperty("eMail", array("required"=>true));
-$grid3->setColProperty("LPC", array("required"=>true));
+$grid3->setColProperty("LPC", array("label"=>"LPC Description","editrules"=>array("required"=>true)));
 $grid3->setColProperty("Notes", array("label"=>"Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80)));
 $grid3->setColProperty("MemberInactive", array("label"=>"Active Status","required"=>true));
+$grid3->setColProperty("username",array("label"=>"User Name"));
+$grid3->setColProperty("password",array("label"=>"Encrypted Password"));
+
+$cid = jqGridUtils::GetParam('LpcMemberID');
+// $cid = $conn->lastInsertId();
+// $grid3->setAfterCrudAction("add","insert into tblMemberCreds (LpcMemberID) values(?)",array($cid));
 
 // Enable filter toolbar searching
 $grid3->toolbarfilter = true;
 // Enable operation search
 $grid3->setFilterOptions(array("searchOperators"=>true));
 
-// $grid3->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false, array(""=>"Select Mode..."));
-// $grid3->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
-// $sql = "
-    // SELECT distinct LpcMemberID,
-           // case
-               // when LastName = 'UNASSIGNED' then LastName
-               // else concat(FirstName,' ',LastName)
-           // end CB
-    // FROM tblLpcMembers
-    // ORDER BY 2";
-// $grid3->setSelect("ContactedBy", $sql, false, true, false, array(""=>""));
+$grid3->setSelect("LPC", "select LpcID,LpcDescription from tblLpcType order by 2", false, true, false);
+$grid3->setSelect("MemberInactive", array(0=>'Active',1=>'Inactive'), false, true, false);
+$grid3->setSelect("permission", array('root'=>'root','lpchead'=>'lpchead','comittee'=>'comittee','user'=>'user'), false, true, false);
+
 $grid3->navigator = true;
 $grid3->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
 $grid3->setNavOptions('edit',array("height"=>"auto","dataheight"=>"auto","width"=>700,"closeAfterEdit"=>true));
@@ -103,6 +103,16 @@ function(formid) {
     jQuery('#viewhdgrid3').html('LpcMemberID '+$('#v_LpcMemberID span').html());
 }
 TB;
+$editBox = <<<EB
+    function(formid) {
+        jQuery('#Notes').css({'width':'545px'});
+        jQuery('#password').css({'width':'470px'});
+}
+EB;
+
 $grid3->setNavEvent('view','beforeShowForm',$txtbx);
+$grid3->setNavEvent('edit','beforeShowForm',$editBox);
 // Enjoy
 $grid3->renderGrid('#grid3','#grid3-toppager',true, null, null, true, false);
+?>
+

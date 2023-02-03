@@ -49,7 +49,7 @@ if (!defined('PHPSUITO_ROOT')) {
     require(PHPSUITO_ROOT . 'Autoloader.php');
 }
 
-//require_once 'jqGridUtils.php';
+// require_once 'jqGridUtils.php';
 
 class jqGrid
 {

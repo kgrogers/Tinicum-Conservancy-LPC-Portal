@@ -53,16 +53,13 @@ $grid10->setUrl('tblMemberCreds.php');
 
 // Change some property of the field(s)
 $grid10->setColProperty("LpcMemberID", array("editable"=>false,"hidden"=>true));
-// $grid10->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
-// $grid10->setColProperty("Status", array("required"=>true));
-// $grid10->setColProperty("CurrentlyAssignedTo", array("required"=>true));
 
 // Enable filter toolbar searching
 $grid10->toolbarfilter = true;
 // Enable operation search
 $grid10->setFilterOptions(array("searchOperators"=>true));
 
-// $grid10->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false, array(""=>"Select Mode..."));
+$grid10->setSelect("permission", array('root'=>'root','lpchead'=>'lpchead','comittee'=>'comittee','user'=>'user'), false, true, false);
 // $grid10->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
 // $sql = "
     // SELECT distinct LpcMemberID,

@@ -89,8 +89,8 @@ $grid1->toolbarfilter = true;
 // Enable operation search
 $grid1->setFilterOptions(array("searchOperators"=>true));
 
-$grid1->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false, array(""=>"Select Mode..."));
-$grid1->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
+$grid1->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false);
+$grid1->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false);
 $sql = "
     SELECT distinct LpcMemberID,
            case

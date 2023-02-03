@@ -70,7 +70,7 @@
                 <li><a href="#ContactMode">Contact Modes</a></li>
                 <li><a href="#LOStatus">Land Owner Status</a></li>
                 <li><a href="#Members">LPC Members</a></li>
-                <li><a href="#memcreds">LPC Member Cred</a></li>
+            <!--    <li><a href="#memcreds">LPC Member Cred</a></li> -->
                 <li><a href="#LpcType">LPC Type</a></li>
                 <li><a href="#Watershed">Watersheds</a></li>
                 <li><a href="#LandUse">Land Uses</a></li>
@@ -102,9 +102,9 @@
             <div id="LpcType" class="mtab" style="display:none;">
                 <?php include("tblLpcType.php"); ?>
             </div>
-            <div id="memcreds" class="mtab" style="display:none;">
+        <!--    <div id="memcreds" class="mtab" style="display:none;">
                 <?php include("tblMemberCreds.php"); ?>
-            </div>
+            </div> -->
         </div>
     </body>
 </html>

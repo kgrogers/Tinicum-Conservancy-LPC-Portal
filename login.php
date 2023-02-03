@@ -22,7 +22,7 @@
                    password,
                    LpcMemberID,
                    permission
-            from tblMemberCreds
+            from tblLpcMembers
             where username = :uname";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(":uname"=>$userid));
@@ -61,17 +61,16 @@
         }
         
         $sql = "
-            select m.FirstName,
-                   m.LastName,
-                   lower(m.eMail) eMail,
-                   m.LpcMemberId LpcMemberID,
-                   c.password,
-                   c.username,
-                   c.permission,
-                   m.MemberInactive
-            from tblLpcMembers m, tblMemberCreds c
-            where m.LpcMemberID = c.LpcMemberID and
-                  m.eMail = :email";
+            select FirstName,
+                   LastName,
+                   lower(eMail) eMail,
+                   LpcMemberId LpcMemberID,
+                   password,
+                   username,
+                   permission,
+                   MemberInactive
+            from tblLpcMembers
+            where eMail = :email";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(":email"=>$email));
         $usrData = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -84,7 +83,7 @@
         } elseif ($email == $usrData['eMail']) {
             $userid = fivetwo($usrData['FirstName'], $usrData['LastName']);
             $sql = "
-                update tblMemberCreds
+                update tblLpcMembers
                 set password = :pwd,
                     username = :username
                 where LpcMemberID = :memid";
@@ -125,14 +124,12 @@
     
     // Preload arrays for prechecks
     $sql = "
-        select m.FirstName,
-               m.eMail,
-               m.LPC,
-               m.MemberInactive,
-               c.username
-        from tblLpcMembers m,
-             tblMemberCreds c
-        where m.LpcmemberID = c.LpcMemberID";
+        select FirstName,
+               eMail,
+               LPC,
+               MemberInactive,
+               username
+        from tblLpcMembers";
     foreach ($db->query($sql,PDO::FETCH_ASSOC) as $row) {
         $fn[] = $row['FirstName'];
         $em[] = strtolower($row['eMail']);
