@@ -12,31 +12,31 @@
         $_GET['_search'] = 'false';
         $grid->SelectCommand = "
             select ContactDate,
-                case
-                    when FirstName = 'UNASSIGNED' then FirstName
-                    else concat(FirstName, ' ', LastName, ' (', left(LPC,2), ')')
-                end ContactedBy,
-                ContactMode,
-                ContactNote,
-                NextStep
+                   case
+                       when FirstName = 'UNASSIGNED' then FirstName
+                       else concat(FirstName, ' ', LastName, ' (', left(LPC,2), ')')
+                    end ContactedBy,
+                    ContactMode,
+                    ContactNote,
+                    NextStep
             from tblContactNotes,
-                tblLpcMembers
+                 tblLpcMembers
             where tblContactNotes.ContactedBy = tblLpcMembers.LpcMemberID and
-            LandOwnerID = ".$loid;
+                  LandOwnerID = ".$loid;
     } else {
         $grid->SelectCommand = "
             select ContactDate,
-                case
-                    when FirstName = 'UNASSIGNED' then FirstName
-                    else concat(FirstName, ' ', LastName, ' (', left(LPC,2), ')')
-                end ContactedBy,
-                ContactMode,
-                ContactNote,
-                NextStep
+                   case
+                       when FirstName = 'UNASSIGNED' then FirstName
+                       else concat(FirstName, ' ', LastName, ' (', left(LPC,2), ')')
+                    end ContactedBy,
+                    ContactMode,
+                    ContactNote,
+                    NextStep
             from tblContactNotes,
-                tblLpcMembers
+                 tblLpcMembers
             where tblContactNotes.ContactedBy = tblLpcMembers.LpcMemberID and
-            LandOwnerID = 0";
+                  LandOwnerID = 0";
     }
     $grid->setPrimaryKeyId("ContactNoteID");
     $grid->serialKey = false;

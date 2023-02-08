@@ -21,6 +21,7 @@
             select username,
                    password,
                    LpcMemberID,
+                   LPC,
                    permission
             from tblLpcMembers
             where username = :uname";
@@ -33,6 +34,7 @@
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
             $_SESSION['LandOwnerID'] = 0;
+            $_SESSION['mLPC'] = $usrData['LPC'];
         } else {
             $_SESSION['loggedin'] = 'pwfail';
             $_SESSION['username'] = $usrData['username'];

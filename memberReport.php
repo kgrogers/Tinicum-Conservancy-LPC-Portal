@@ -2,6 +2,7 @@
     @session_start();
     $memid = $_SESSION['LpcMemberID'];
     $LandOwnerID = $_SESSION['LandOwnerID'];
+    $mLPC = (int)$_SESSION['mLPC'];
 
     require('mc_table1.php');
     require('sqlPDO.php');
@@ -59,7 +60,8 @@
         from tblParcels p,
              tblWatersheds w
         where p.LandownerID = :loid and
-              p.WatershedID = w.WatershedID
+              p.WatershedID = w.WatershedID and
+              p.LPC = :mLPC
         order by p.Acres desc";
     $parcels = $db->prepare($sql);
     
@@ -117,7 +119,7 @@
     $header[] = $lo[0]['LandOwnerNotes'];
     
     // $row['LandOwnerID'] = 16;
-    $parcels->execute(array(":loid"=>$lo[0]['LandOwnerID']));
+    $parcels->execute(array(":loid"=>$lo[0]['LandOwnerID'],"mLPC"=>$mLPC));
     $parcelInfo = $parcels->fetchall(PDO::FETCH_ASSOC);
     
     $parcelData = array();

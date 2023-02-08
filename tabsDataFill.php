@@ -4,6 +4,7 @@
         return false;
     }
     
+    $mLPC = (int)$_SESSION['mLPC'];
     $lndonrID = $_POST['loid'];
     $checked = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check" viewBox="0 0 16 16"><path d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425a.267.267 0 0 1 .02-.022z"/></svg>';
     // $unchecked = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-slash-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M11.354 4.646a.5.5 0 0 0-.708 0l-6 6a.5.5 0 0 0 .708.708l6-6a.5.5 0 0 0 0-.708z"/></svg>';
@@ -57,19 +58,23 @@
                w.Watershed,
                p.ContiguousParcels,
                p.GasLease,
-               p.DisqualifyingUses
+               p.DisqualifyingUses,
+               pt.LpcDescription
         from tblParcels p,
-             tblWatersheds w
+             tblWatersheds w,
+             tblLpcType pt
         where p.LandOwnerID = :loid and
-              p.WatershedID = w.WatershedID";
+              p.LPC = :mLPC and
+              p.WatershedID = w.WatershedID and
+              p.LPC = pt.LpcID";
         $stmt = $db->prepare($sql);
-        $stmt->execute(array(':loid' => $lndonrID));
+        $stmt->execute(array(':loid' => $lndonrID, ':mLPC' => $mLPC));
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
             $row['ContiguousParcels'] == 1 ? $row['ContiguousParcels'] = $checked : $row['ContiguousParcels'] = $unchecked;
             $row['GasLease'] == 1 ? $row['GasLease'] = $checked : $row['GasLease'] = $unchecked;
             $row['DisqualifyingUses'] == 1 ? $row['DisqualifyingUses'] = $checked : $row['DisqualifyingUses'] = $unchecked;
-            $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td></tr>";
+            $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
         }
 
         $mailaddrhtml = '';

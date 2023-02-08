@@ -632,6 +632,7 @@
                                                 <th>Contiguous Parcels</th>
                                                 <th>Gas Lease</th>
                                                 <th>Disqualifying Uses</th>
+                                                <th>LPC</th>
                                             </tr>
                                         </thead>
                                         <tbody id="t-parcels"></tbody>
