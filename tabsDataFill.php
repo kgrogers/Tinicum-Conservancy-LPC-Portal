@@ -45,30 +45,56 @@
         exit();
     }
     $parcelshtml = '';
-    $sql = "
-        select p.ParcelNum,
-               p.Acres,
-               p.DeededTo,
-               p.ParcelRoadNum,
-               p.ParcelRoad,
-               p.ParcelCity,
-               p.ParcelState,
-               p.ParcelZip,
-               p.LandUse,
-               w.Watershed,
-               p.ContiguousParcels,
-               p.GasLease,
-               p.DisqualifyingUses,
-               pt.LpcDescription
-        from tblParcels p,
-             tblWatersheds w,
-             tblLpcType pt
-        where p.LandOwnerID = :loid and
-              p.LPC = :mLPC and
-              p.WatershedID = w.WatershedID and
-              p.LPC = pt.LpcID";
+    if ($_SESSION['permission'] == 'root') {
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                p.LandUse,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses,
+                pt.LpcDescription
+            from tblParcels p,
+                tblWatersheds w,
+                tblLpcType pt
+            where p.LandOwnerID = :loid and
+                p.WatershedID = w.WatershedID and
+                p.LPC = pt.LpcID";
+        $stmt = $db->prepare($sql);
+        $stmt->execute(array(':loid' => $lndonrID));
+    } else {
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                p.LandUse,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses,
+                pt.LpcDescription
+            from tblParcels p,
+                tblWatersheds w,
+                tblLpcType pt
+            where p.LandOwnerID = :loid and
+                p.LPC = :mLPC and
+                p.WatershedID = w.WatershedID and
+                p.LPC = pt.LpcID";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':loid' => $lndonrID, ':mLPC' => $mLPC));
+    }
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
             $row['ContiguousParcels'] == 1 ? $row['ContiguousParcels'] = $checked : $row['ContiguousParcels'] = $unchecked;
