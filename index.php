@@ -182,6 +182,7 @@
             $('#signin_css').attr('disabled', 'disabled');
         }
         $(document).ready(function() {
+            $('#forgotup').hide();
             if (SIGNEDIN['loggedin'] == 'yes') {
                 mainScreen();
             }
@@ -324,10 +325,10 @@
                 if ($('#regCheck').is(':checked')) {
                     $.removeCookie('TC_uname');
                     $('#InputUsername').val('');
-                    $('#forgotup').hide();
+                    // $('#forgotup').hide();
                     registerScreen();
                 } else {
-                    $('#forgotup').show();
+                    // $('#forgotup').show();
                     loginScreen();
                 }
             });
