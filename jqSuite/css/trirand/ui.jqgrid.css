@@ -4,7 +4,7 @@
 	-moz-box-sizing: content-box; 
 	-webkit-box-sizing: content-box; 
 	box-sizing: content-box;
-	font-size:12px;
+	font-size:11px;
 }
 .ui-jqgrid .ui-jqgrid-view {
 	position: relative;
@@ -569,4 +569,8 @@ td.menu_text {
 
 .ui-jqgrid .frozen-rdiv  {
 	z-index: 10000;
+}
+.ui-col-menu {
+	overflow: auto;
+	height: 17em;
 }
