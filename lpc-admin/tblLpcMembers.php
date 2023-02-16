@@ -45,7 +45,7 @@ $grid3->setColModel();
 $grid3->setGridOptions(array(
     "rowNum"=>40,
     "rowList"=>array(30,40,50),
-    "sortname"=>"LastName,FirstName",
+    "sortname"=>"LpcMemberID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -58,7 +58,7 @@ $grid3->setGridOptions(array(
 $grid3->setUrl('tblLpcMembers.php');
 
 // Change some property of the field(s)
-$grid3->setColProperty("LpcMemberID", array("key"=>true,"editable"=>false,"hidden"=>true));
+$grid3->setColProperty("LpcMemberID", array("width"=>"50","key"=>true,"editable"=>false,"hidden"=>false));
 $grid3->setColProperty("FirstName", array("label"=>"First Name", "required"=>true));
 $grid3->setColProperty("LastName", array("label"=>"Last Name", "required"=>true));
 $grid3->setColProperty("Phone", array("required"=>true));

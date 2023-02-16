@@ -35,7 +35,7 @@ $grid5->setColModel();
 $grid5->setGridOptions(array(
     "rowNum"=>23,
     "rowList"=>array(30,40,50),
-    "sortname"=>"WaterShedAbrev",
+    "sortname"=>"WatershedID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -48,7 +48,7 @@ $grid5->setGridOptions(array(
 $grid5->setUrl('tblWatersheds.php');
 
 // Change some property of the field(s)
-$grid5->setColProperty("WatershedID", array("editable"=>false,"hidden"=>true));
+$grid5->setColProperty("WatershedID", array("width"=>"40","editable"=>false,"hidden"=>false));
 // $grid5->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 // $grid5->setColProperty("Status", array("required"=>true));
 // $grid5->setColProperty("CurrentlyAssignedTo", array("required"=>true));

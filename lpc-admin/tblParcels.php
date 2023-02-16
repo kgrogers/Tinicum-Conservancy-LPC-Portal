@@ -63,7 +63,7 @@ $grid4->setGridOptions(array(
 $grid4->setUrl('tblParcels.php');
 
 // Change some property of the field(s)
-$grid4->setColProperty("ParcelID", array("editable"=>false,"hidden"=>true));
+$grid4->setColProperty("ParcelID", array("editable"=>false,"hidden"=>false));
 // $grid4->setColProperty("FirstName", array("label"=>"First Name", "required"=>true));
 // $grid4->setColProperty("LastName", array("label"=>"Last Name", "required"=>true));
 // $grid4->setColProperty("Phone", array("required"=>true));

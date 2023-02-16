@@ -33,7 +33,7 @@ $grid8->setColModel();
 $grid8->setGridOptions(array(
     "rowNum"=>23,
     "rowList"=>array(30,40,50),
-    "sortname"=>"Status",
+    "sortname"=>"StatusID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -46,7 +46,7 @@ $grid8->setGridOptions(array(
 $grid8->setUrl('tblLandOwnerStatus.php');
 
 // Change some property of the field(s)
-$grid8->setColProperty("StatusID", array("editable"=>false,"hidden"=>true));
+$grid8->setColProperty("StatusID", array("width"=>"20","editable"=>false,"hidden"=>false));
 // $grid8->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 // $grid8->setColProperty("Status", array("required"=>true));
 // $grid8->setColProperty("CurrentlyAssignedTo", array("required"=>true));

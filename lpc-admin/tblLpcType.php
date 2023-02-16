@@ -35,7 +35,7 @@ $grid9->setColModel();
 $grid9->setGridOptions(array(
     "rowNum"=>23,
     "rowList"=>array(30,40,50),
-    "sortname"=>"LpcDescription",
+    "sortname"=>"LpcID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -48,7 +48,7 @@ $grid9->setGridOptions(array(
 $grid9->setUrl('tblLpcType.php');
 
 // Change some property of the field(s)
-$grid9->setColProperty("LpcID", array("editable"=>false,"hidden"=>true));
+$grid9->setColProperty("LpcID", array("width"=>"40","editable"=>false,"hidden"=>false));
 // $grid9->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 // $grid9->setColProperty("Status", array("required"=>true));
 // $grid9->setColProperty("CurrentlyAssignedTo", array("required"=>true));

@@ -33,7 +33,7 @@ $grid7->setColModel();
 $grid7->setGridOptions(array(
     "rowNum"=>23,
     "rowList"=>array(30,40,50),
-    "sortname"=>"ContactMode",
+    "sortname"=>"ContactModeID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -46,7 +46,7 @@ $grid7->setGridOptions(array(
 $grid7->setUrl('tblContactModes.php');
 
 // Change some property of the field(s)
-$grid7->setColProperty("ContactModeID", array("editable"=>false,"hidden"=>true));
+$grid7->setColProperty("ContactModeID", array("width"=>"20","editable"=>false,"hidden"=>false));
 // $grid7->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 // $grid7->setColProperty("Status", array("required"=>true));
 // $grid7->setColProperty("CurrentlyAssignedTo", array("required"=>true));

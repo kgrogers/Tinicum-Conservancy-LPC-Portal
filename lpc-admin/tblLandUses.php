@@ -33,7 +33,7 @@ $grid6->setColModel();
 $grid6->setGridOptions(array(
     "rowNum"=>23,
     "rowList"=>array(30,40,50),
-    "sortname"=>"LandUse",
+    "sortname"=>"LandUseID",
     // "sortorder"=>"asc",
     "hoverrows"=>true,
     "altRows"=>true,
@@ -46,7 +46,7 @@ $grid6->setGridOptions(array(
 $grid6->setUrl('tblLandUses.php');
 
 // Change some property of the field(s)
-$grid6->setColProperty("LandUseID", array("editable"=>false,"hidden"=>true));
+$grid6->setColProperty("LandUseID", array("width"=>"20","editable"=>false,"hidden"=>false));
 // $grid6->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
 // $grid6->setColProperty("Status", array("required"=>true));
 // $grid6->setColProperty("CurrentlyAssignedTo", array("required"=>true));
