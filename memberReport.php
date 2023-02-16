@@ -3,9 +3,9 @@
     $memid = $_SESSION['LpcMemberID'];
     $LandOwnerID = $_SESSION['LandOwnerID'];
     $mLPC = (int)$_SESSION['mLPC'];
-
     require('mc_table1.php');
     require('sqlPDO.php');
+    // print("<pre>".print_r($_SESSION,true).".</pre>");
 
     $db = opendb('MySQL','tinicum');
     // Get Member's contact information
@@ -20,50 +20,95 @@
     $memberInfo = $db->prepare($sql);
     
     // Get Landowner Data
-    $sql = "
-        select l.LandOwnerID,
-            concat(m.FirstName,' ',m.LastName,' (',p.LPC,')') CurrentlyAssignedTo,
-            l.LandOwner,
-            l.LandOwnerNotes,
-            s.Status,
-            l.HowToContact,
-            l.LandOwnerAddress1,
-            l.LandOwnerAddress2,
-            l.LandOwnerCity,
-            l.LandOwnerState,
-            l.LandOwnerZip
-        from tblLandOwners l,
-            tblLandOwnerStatus s,
-            tblLpcMembers m,
-            tblLpcType p
-        where l.LandOwnerID = :LandOwnerID and
-            l.Status = s.StatusID and
-            l.CurrentlyAssignedTo = m.LpcMemberID and
-            m.LPC = p.LpcID";
-    $landownerInfo = $db->prepare($sql);
-    
-    // Get parcel information for specific landowner
-    // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true
-    $sql = "
-        select p.ParcelNum,
-               p.Acres,
-               p.DeededTo,
-               p.ParcelRoadNum,
-               p.ParcelRoad,
-               p.ParcelCity,
-               p.ParcelState,
-               p.ParcelZip,
-               w.Watershed,
-               p.ContiguousParcels,
-               p.GasLease,
-               p.DisqualifyingUses
-        from tblParcels p,
-             tblWatersheds w
-        where p.LandownerID = :loid and
-              p.WatershedID = w.WatershedID and
-              p.LPC = :mLPC
-        order by p.Acres desc";
-    $parcels = $db->prepare($sql);
+    if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {
+        $sql = "
+            select l.LandOwnerID,
+                concat(m.FirstName,' ',m.LastName,' (',p.LPC,')') CurrentlyAssignedTo,
+                l.LandOwner,
+                l.LandOwnerNotes,
+                s.Status,
+                l.HowToContact,
+                l.LandOwnerAddress1,
+                l.LandOwnerAddress2,
+                l.LandOwnerCity,
+                l.LandOwnerState,
+                l.LandOwnerZip
+            from tblLandOwners l,
+                tblLandOwnerStatus s,
+                tblLpcMembers m,
+                tblLpcType p
+            where l.LandOwnerID = :LandOwnerID and
+                l.Status = s.StatusID and
+                l.CurrentlyAssignedTo = m.LpcMemberID and
+                m.LPC = p.LpcID";
+        $landownerInfo = $db->prepare($sql);
+        
+        // Get parcel information for specific landowner
+        // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses
+            from tblParcels p,
+                tblWatersheds w
+            where p.LandownerID = :loid and
+                p.WatershedID = w.WatershedID and
+                p.LPC = :mLPC
+            order by p.Acres desc";
+        $parcels = $db->prepare($sql);
+    } else {
+        $sql = "
+            select l.LandOwnerID,
+                concat(m.FirstName,' ',m.LastName,' (',p.LPC,')') CurrentlyAssignedTo,
+                l.LandOwner,
+                l.LandOwnerNotes,
+                s.Status,
+                l.HowToContact,
+                l.LandOwnerAddress1,
+                l.LandOwnerAddress2,
+                l.LandOwnerCity,
+                l.LandOwnerState,
+                l.LandOwnerZip
+            from tblLandOwners l,
+                tblLandOwnerStatus s,
+                tblLpcMembers m,
+                tblLpcType p
+            where l.LandOwnerID = :LandOwnerID and
+                l.Status = s.StatusID and
+                l.CurrentlyAssignedTo = m.LpcMemberID";
+        $landownerInfo = $db->prepare($sql);
+        
+        // Get parcel information for specific landowner
+        // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses
+            from tblParcels p,
+                tblWatersheds w
+            where p.LandownerID = :loid and
+                p.WatershedID = w.WatershedID
+            order by p.Acres desc";
+        $parcels = $db->prepare($sql);
+    }
     
     // Get contact notes for specific landowner
     $sql = "
@@ -119,7 +164,11 @@
     $header[] = $lo[0]['LandOwnerNotes'];
     
     // $row['LandOwnerID'] = 16;
-    $parcels->execute(array(":loid"=>$lo[0]['LandOwnerID'],"mLPC"=>$mLPC));
+    if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {    
+        $parcels->execute(array(":loid"=>$lo[0]['LandOwnerID'],"mLPC"=>$mLPC));
+    } else {
+        $parcels->execute(array(":loid"=>$lo[0]['LandOwnerID']));
+    }
     $parcelInfo = $parcels->fetchall(PDO::FETCH_ASSOC);
     
     $parcelData = array();

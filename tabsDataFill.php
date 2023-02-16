@@ -45,7 +45,7 @@
         exit();
     }
     $parcelshtml = '';
-    if ($_SESSION['permission'] == 'root') {
+    if ($_SESSION['permission'] == 'root' or $_SESSION['permission'] == 'user') {
         $sql = "
             select p.ParcelNum,
                 p.Acres,

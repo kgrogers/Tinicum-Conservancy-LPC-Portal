@@ -2,6 +2,7 @@
     @session_start();
     $memid = $_SESSION['LpcMemberID'];
     $mLPC = (int)$_SESSION['mLPC'];
+    // print("<pre>".print_r($_SESSION,true).".</pre>");
 
     require('mc_table.php');
     require('sqlPDO.php');
@@ -40,25 +41,46 @@
     
     // Get parcel information for specific landowner
     // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true
-    $sql = "
-        select p.ParcelNum,
-               p.Acres,
-               p.DeededTo,
-               p.ParcelRoadNum,
-               p.ParcelRoad,
-               p.ParcelCity,
-               p.ParcelState,
-               p.ParcelZip,
-               w.Watershed,
-               p.ContiguousParcels,
-               p.GasLease,
-               p.DisqualifyingUses
-        from tblParcels p,
-             tblWatersheds w
-        where p.LandownerID = :loid and
-              p.WatershedID = w.WatershedID and
-              p.LPC = :mLPC
-        order by p.Acres desc";
+    if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses
+            from tblParcels p,
+                tblWatersheds w
+            where p.LandownerID = :loid and
+                p.WatershedID = w.WatershedID and
+                p.LPC = :mLPC
+            order by p.Acres desc";
+    } else {
+        $sql = "
+            select p.ParcelNum,
+                p.Acres,
+                p.DeededTo,
+                p.ParcelRoadNum,
+                p.ParcelRoad,
+                p.ParcelCity,
+                p.ParcelState,
+                p.ParcelZip,
+                w.Watershed,
+                p.ContiguousParcels,
+                p.GasLease,
+                p.DisqualifyingUses
+            from tblParcels p,
+                tblWatersheds w
+            where p.LandownerID = :loid and
+                p.WatershedID = w.WatershedID
+            order by p.Acres desc";
+    }
     $parcels = $db->prepare($sql);
     
     // Get contact notes for specific landowner
@@ -116,7 +138,11 @@
         $header[] = $row['LandOwnerNotes'];
     
         // $row['LandOwnerID'] = 16;
-        $parcels->execute(array(":loid"=>$row['LandOwnerID'],":mLPC"=>$mLPC));
+        if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {
+            $parcels->execute(array(":loid"=>$row['LandOwnerID'],":mLPC"=>$mLPC));
+        } else {
+            $parcels->execute(array(":loid"=>$row['LandOwnerID']));
+        }
         $parcelInfo = $parcels->fetchall(PDO::FETCH_ASSOC);
         
         $parcelData = array();
