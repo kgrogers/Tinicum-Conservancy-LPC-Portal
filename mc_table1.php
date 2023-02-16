@@ -74,9 +74,9 @@ class PDF_MC_Table extends FPDF
             $y2 = $this->GetY();
             $this->SetXY($x+50,$y);
             $this->Cell(40,7,$prow['Watershed'],0,0,'L');
-            $prow['ContiguousParcels'] == 0 ? $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/unchecked.png',198,$y+3,4) : $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/checked.png',198,$y+3,4);
-            $prow['GasLease'] == 0 ? $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/unchecked.png',230,$y+3,4) : $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/checked.png',230,$y+3,4);
-            $prow['GasLease'] == 0 ? $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/unchecked.png',256,$y+3,4) : $this->Image('/var/www/lpc.tinicumconservancy.org/public_html/images/checked.png',256,$y+3,4);
+            $prow['ContiguousParcels'] == 0 ? $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/unchecked.png',198,$y+3,4) : $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/checked.png',198,$y+3,4);
+            $prow['GasLease'] == 0 ? $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/unchecked.png',230,$y+3,4) : $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/checked.png',230,$y+3,4);
+            $prow['GasLease'] == 0 ? $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/unchecked.png',256,$y+3,4) : $this->Image('/var/www/llpc.tinicumconservancy.org/public_html/images/checked.png',256,$y+3,4);
             // $this->Ln(12);
             $y1 > $y2 ? $y = $y1 : $y = $y2;
             $this->SetXY(5,$y);
