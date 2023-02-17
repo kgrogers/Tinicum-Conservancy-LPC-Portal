@@ -55,7 +55,7 @@
                 p.ParcelCity,
                 p.ParcelState,
                 p.ParcelZip,
-                p.LandUse,
+                l.LandUse,
                 w.Watershed,
                 p.ContiguousParcels,
                 p.GasLease,
@@ -63,10 +63,12 @@
                 pt.LpcDescription
             from tblParcels p,
                 tblWatersheds w,
-                tblLpcType pt
+                tblLpcType pt,
+                tblLandUses l
             where p.LandOwnerID = :loid and
                 p.WatershedID = w.WatershedID and
-                p.LPC = pt.LpcID";
+                p.LPC = pt.LpcID and
+                p.LandUse = l.LandUseID";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':loid' => $lndonrID));
     } else {

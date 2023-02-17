@@ -26,7 +26,7 @@ $grid4->SelectCommand = "
            p.ContiguousParcels,
            p.GasLease,
            p.DisqualifyingUses,
-           p.LandUse,
+           u.LandUse,
            p.ParcelRoadNum,
            p.ParcelRoad,
            p.ParcelCity,
@@ -34,9 +34,11 @@ $grid4->SelectCommand = "
            p.ParcelZip
     from tblParcels p,
          tblLandOwners l,
-         tblWatersheds w
+         tblWatersheds w,
+         tblLandUses u
     where p.LandOwnerID = l.LandOwnerID and
-          p.WatershedID = w.WatershedID";
+          p.WatershedID = w.WatershedID and
+          p.LandUse = u.LandUseID";
 
 // Set output format to json
 $grid4->dataType = 'json';
