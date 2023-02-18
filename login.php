@@ -17,6 +17,7 @@
 
     function login($userid, $pwd) {
         global $db;
+        global $actvy;
         $sql = "
             select username,
                    password,
@@ -35,6 +36,7 @@
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
             $_SESSION['LandOwnerID'] = 0;
             $_SESSION['mLPC'] = $usrData['LPC'];
+            $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"login",":now"=>date('Y-m-d H:i:s'),":result"=>"success"));
         } else {
             $_SESSION['loggedin'] = 'pwfail';
             $_SESSION['username'] = $usrData['username'];
@@ -44,6 +46,7 @@
             if ($_SESSION['pwfailcnt'] > 3) {
                 $_SESSION['loggedin'] = 'too many bad';
             }
+            $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"login",":now"=>date('Y-m-d H:i:s'),":result"=>"pwfail"));
         }
         return $_SESSION;
     }
@@ -53,12 +56,14 @@
         global $em;
         global $mi;
         global $fn;
+        global $actvy;
         
         if (!in_array(strtolower($email),$em)) {
             $_SESSION['loggedin'] = 'missingEmail';
             $_SESSION['username'] = '';
             $_SESSION['permission'] = '';
             $_SESSION['LpcMemberID'] = '';
+            $actvy->execute(array(":LpcMemberID"=>null,":email"=>$email,"activity"=>"register",":now"=>date('Y-m-d H:i:s'),":result"=>"missingEmail"));
             return $_SESSION;
         }
         
@@ -82,6 +87,7 @@
             $_SESSION['username'] = '';
             $_SESSION['permission'] = '';
             $_SESSION['LpcMemberID'] = '';
+            $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"register",":now"=>date('Y-m-d H:i:s'),":result"=>"inactive"));
         } elseif ($email == $usrData['eMail']) {
             $userid = fivetwo($usrData['FirstName'], $usrData['LastName']);
             $sql = "
@@ -100,6 +106,7 @@
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
             $_SESSION['FirstName'] = $fn[array_search(strtolower($email),$em)];
+            $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"register",":now"=>date('Y-m-d H:i:s'),":result"=>"success"));
         }
         return $_SESSION;
     }
@@ -123,7 +130,10 @@
     
     $db = opendb("MySQL","tinicum");
     $fn = $em = $mi = $un = array();
-    
+    $sql = "insert into tblMemberActivity (LpcMemberID,email,activity,occurredAt,result)
+            values (:LpcMemberID,:email,:activity,:now,:result)";
+    $actvy = $db->prepare($sql);
+
     // Preload arrays for prechecks
     $sql = "
         select FirstName,
