@@ -219,6 +219,9 @@
                     window.open('memberReport.php','_blank');
                 }
             });
+            $('#LandOwnerListQuestion').hover(function() {
+                $(this).prop('title',"Landowners that are colored red\nare are Status inactive. Check the\nLand Owner Notes section\nto determine the disposition of\nthe parcel(s) they own(ed)");
+            });
             $('#newnoteform').on('submit', function(e) {
                 // console.log(e);
                 e.preventDefault();
@@ -487,7 +490,9 @@
     </div>
     <!-- Modal End-->
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow" style="display:none">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Land Owners</a>
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="#">Land Owners&nbsp;&nbsp;
+            <i id="LandOwnerListQuestion" class="bi bi-question-circle"></i>
+        </a>
         <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
             data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
             aria-label="Toggle navigation">
