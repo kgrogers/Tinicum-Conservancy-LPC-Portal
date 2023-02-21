@@ -60,15 +60,18 @@
                 p.ContiguousParcels,
                 p.GasLease,
                 p.DisqualifyingUses,
-                pt.LpcDescription
+                pt.LpcDescription,
+                lo.Status
             from tblParcels p,
                 tblWatersheds w,
                 tblLpcType pt,
-                tblLandUses l
+                tblLandUses l,
+                tblLandOwners lo
             where p.LandOwnerID = :loid and
                 p.WatershedID = w.WatershedID and
                 p.LPC = pt.LpcID and
-                p.LandUse = l.LandUseID";
+                p.LandUse = l.LandUseID and
+                p.LandOwnerID = lo.LandOwnerID";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':loid' => $lndonrID));
     } else {
@@ -86,14 +89,17 @@
                 p.ContiguousParcels,
                 p.GasLease,
                 p.DisqualifyingUses,
-                pt.LpcDescription
+                pt.LpcDescription,
+                lo.Status
             from tblParcels p,
                 tblWatersheds w,
-                tblLpcType pt
+                tblLpcType pt,
+                tblLandOwners lo
             where p.LandOwnerID = :loid and
                 p.LPC = :mLPC and
                 p.WatershedID = w.WatershedID and
-                p.LPC = pt.LpcID";
+                p.LPC = pt.LpcID and
+                p.LandOwnerID = lo.LandOwnerID";
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':loid' => $lndonrID, ':mLPC' => $mLPC));
     }
@@ -102,7 +108,11 @@
             $row['ContiguousParcels'] == 1 ? $row['ContiguousParcels'] = $checked : $row['ContiguousParcels'] = $unchecked;
             $row['GasLease'] == 1 ? $row['GasLease'] = $checked : $row['GasLease'] = $unchecked;
             $row['DisqualifyingUses'] == 1 ? $row['DisqualifyingUses'] = $checked : $row['DisqualifyingUses'] = $unchecked;
-            $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+            if ($row['Status'] != 4) {
+                $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+            } else {
+                $parcelshtml .= "<tr class='bg-danger bg-opacity-25'><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+            }
         }
 
         $mailaddrhtml = '';
