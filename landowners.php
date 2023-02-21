@@ -23,14 +23,16 @@
     if ($memberID == 0){
         $sql = "
             select LandOwnerID,
-                   LandOwner
+                   LandOwner,
+                   Status
             from tblLandOwners
             order by LandOwner";
         $stmt = $db->query($sql);
     } elseif ($permission == 'lpchead') {
             $sql = "
                 select distinct lo.LandOwnerID,
-                       lo.LandOwner
+                       lo.LandOwner,
+                       lo.Status
                 from tblLandOwners lo,
                      tblParcels p
                 where lo.LandOwnerID = p.LandOwnerID and
@@ -41,7 +43,8 @@
     } else {
         $sql = "
             select LandOwnerID,
-                   LandOwner
+                   LandOwner,
+                   Status
             from tblLandOwners
             where CurrentlyAssignedTo = :memid
             order by LandOwner";
@@ -51,7 +54,11 @@
     $rows = $stmt->fetchall(PDO::FETCH_ASSOC);
     $html = "";
     foreach ($rows as $row) {
-        $html .= "<li class='nav-item'><a class='nav-link' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
+        if ($row['Status'] != 4) {
+            $html .= "<li class='nav-item'><a class='nav-link' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
+        } elseif ($row['Status'] == 4) {
+            $html .= "<li class='nav-item'><a class='nav-link text-danger' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
+        }
     }
     print(json_encode($html));
 ?>
