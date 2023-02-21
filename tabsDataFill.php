@@ -103,15 +103,23 @@
         $stmt = $db->prepare($sql);
         $stmt->execute(array(':loid' => $lndonrID, ':mLPC' => $mLPC));
     }
+        $sql = "select count(*) from tblParcels where ParcelNum = :parcelnum";
+        $pnum = $db->prepare($sql);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
+            $pnum->execute(array(":parcelnum"=>$row['ParcelNum']));
+            $numrows = $pnum->fetchColumn();
             $row['ContiguousParcels'] == 1 ? $row['ContiguousParcels'] = $checked : $row['ContiguousParcels'] = $unchecked;
             $row['GasLease'] == 1 ? $row['GasLease'] = $checked : $row['GasLease'] = $unchecked;
             $row['DisqualifyingUses'] == 1 ? $row['DisqualifyingUses'] = $checked : $row['DisqualifyingUses'] = $unchecked;
             if ($row['Status'] != 4) {
                 $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
             } else {
-                $parcelshtml .= "<tr class='bg-danger bg-opacity-25'><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+                if ($numrows != 1) {
+                    $parcelshtml .= "<tr class='bg-danger bg-opacity-25'><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+                } else {
+                    $parcelshtml .= "<tr><td>".$row['ParcelNum']."</td><td>".$row['Acres']."</td><td>".$row['DeededTo']."</td><td>".$row['ParcelRoadNum']."</td><td>".$row['ParcelRoad']."</td><td>".$row['ParcelCity']."</td><td>".$row['ParcelState']."</td><td>".$row['ParcelZip']."</td><td>".$row['LandUse']."</td><td>".$row["Watershed"]."</td><td>".$row['ContiguousParcels']."</td><td>".$row['GasLease']."</td><td>".$row['DisqualifyingUses']."</td><td>".$row['LpcDescription']."</td></tr>";
+                }
             }
         }
 
