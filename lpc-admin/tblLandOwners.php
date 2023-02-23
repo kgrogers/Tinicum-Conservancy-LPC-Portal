@@ -78,23 +78,14 @@ $grid2->setFilterOptions(array("searchOperators"=>true));
     1. Check Add form before submit and make sure LandOwner field isn't a duplicate.
 */
 $grid2->setSelect("Status", "SELECT StatusID, Status as CM FROM tblLandOwnerStatus ORDER BY 2", false, true, false, array(""=>""));
-// $sql = "
-    // SELECT distinct LpcMemberID,
-           // case
-               // when LastName = 'UNASSIGNED' then LastName
-               // else concat(FirstName,' ',LastName)
-           // end CB
-    // FROM tblLpcMembers
-    // where MemberInactive = 0
-    // ORDER BY 2";
-    $sql = "
-        select o.LpcMemberID,
-               concat('(',t.LPC,') ',o.FirstName,' ',o.LastName) LpcMember
-        from tblLpcMembers o,
-             tblLpcType t
-        where o.MemberInactive = 0 and
-              o.LPC = t.LpcID
-        ORDER BY o.LastName";
+$sql = "
+    select o.LpcMemberID,
+           concat('(',t.LPC,') ',o.FirstName,' ',o.LastName) LpcMember
+    from tblLpcMembers o,
+         tblLpcType t
+    where o.MemberInactive = 0 and
+          o.LPC = t.LpcID
+    ORDER BY o.LastName";
 $grid2->setSelect("CurrentlyAssignedTo", $sql, false, true, false, array(""=>""));
 $grid2->navigator = true;
 $grid2->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
@@ -125,5 +116,12 @@ function(formid) {
 }
 LO;
 $grid2->setNavEvent('add','beforeShowForm',$landowneridhide);
+
+$editreadonly = <<<RO
+function(formid) {
+    jQuery('#LandOwnerID').attr('disabled','true');
+}
+RO;
+$grid2->setNavEvent('edit','beforeShowForm',$editreadonly);
 // Enjoy
 $grid2->renderGrid('#grid2','#grid2-toppager',true, null, null, true, false);
