@@ -118,5 +118,12 @@ function(formid) {
 }
 TB;
 $grid2->setNavEvent('view','beforeShowForm',$txtbx);
+
+$landowneridhide = <<<LO
+function(formid) {
+    jQuery('#tr_LandOwnerID').css('display','none');
+}
+LO;
+$grid2->setNavEvent('add','beforeShowForm',$landowneridhide);
 // Enjoy
 $grid2->renderGrid('#grid2','#grid2-toppager',true, null, null, true, false);
