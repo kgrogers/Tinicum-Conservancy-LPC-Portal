@@ -91,7 +91,11 @@
             white-space: nowrap;
             -webkit-overflow-scrolling: touch;
         }
-
+        
+        .mparcels {
+            cursor: pointer;
+            text-decoration: underline;
+        }
         #newNote {
             display: none;
         }
@@ -263,7 +267,7 @@
                 });
             });
             $('#landOwnerList').on('click', 'a', function() {
-                console.log($(this).attr("loid"));
+                // console.log($(this).attr("loid"));
                 LOID = parseInt($(this).attr("loid"));
                 SIGNEDIN['LandOwnerID'] = LOID;
                 $('a#propreport1').show();
