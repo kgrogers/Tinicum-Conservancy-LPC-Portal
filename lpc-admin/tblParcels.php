@@ -79,8 +79,11 @@ $grid4->toolbarfilter = true;
 // Enable operation search
 $grid4->setFilterOptions(array("searchOperators"=>true));
 
-$grid4->setSelect("WatershedID", "SELECT ws.WatershedID, ws.Watershed FROM tblWatersheds ws ORDER BY 2", false, true, false);
-// $grid4->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
+$grid4->setSelect("Watershed", "SELECT WatershedID, Watershed FROM tblWatersheds ORDER BY 2", false, true, false);
+$grid4->setSelect("LandUse", "SELECT LandUseID, LandUse FROM tblLandUses ORDER BY 2", false, true, false);
+$grid4->setSelect("ContiguousParcels",array(0=>"No",1=>"Yes"),false,true,false,);
+$grid4->setSelect("GasLease",array(0=>"No",1=>"Yes"),false,true,false,);
+$grid4->setSelect("DisqualifyingUses",array(0=>"No",1=>"Yes"),false,true,false,);
 // $sql = "
     // SELECT distinct LpcMemberID,
            // case
