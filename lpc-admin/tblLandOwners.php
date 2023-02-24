@@ -40,8 +40,25 @@ $grid2->SelectCommand = "
 
 // Set output format to json
 $grid2->dataType = 'json';
-$grid2->table='tblLandOwners';
+$grid2->setTable = 'tblLandOwners';
+$grid2->table = 'tblLandOwners';
 $grid2->setPrimaryKeyID('LandOwnerID');
+$grid2->serialKey = true;
+$lastInsertID = "none set";
+if ($grid2->oper == 'add') {
+    $data = filter_input_array(INPUT_POST);
+    if ($grid2->insert($data)) {
+        $sql = "select LAST_INSERT_ID()";
+        $stmt = $conn->query($sql);
+        $lastInsertID = $stmt->fetch();
+        //$lastInsertID = $grid2->getLastInsertId();
+        // Create a 'blank' record for this landowner in tblParcels
+        $sql = "insert into tblParcels (LandOwnerID) values(".$lastInsertID[0].")";
+        $conn->query($sql);
+    }
+}
+$grid2->add = false;
+
 // Let the grid create the model
 $grid2->setColModel();
 
@@ -123,5 +140,6 @@ function(formid) {
 }
 RO;
 $grid2->setNavEvent('edit','beforeShowForm',$editreadonly);
+
 // Enjoy
 $grid2->renderGrid('#grid2','#grid2-toppager',true, null, null, true, false);
