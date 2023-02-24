@@ -38,6 +38,21 @@ $grid3->dataType = 'json';
 $grid3->table='tblLpcMembers';
 $grid3->setPrimaryKeyID('LpcMemberID');
 $grid3->serialKey = true;
+
+if ($grid3->oper == 'edit') {
+    $data = filter_input_array(INPUT_POST);
+    if ($data['MemberInactive'] == 1) {
+        if ($grid3->update($data)) {
+            /* We need to change the CurrentlyAssignedTo
+               field for all LandOwners that used to be
+               assigned to this member.
+            */
+            $conn->query("update tblLandOwners set CurrentlyAssignedTo = 38 where CurrentlyAssignedTo = ".$data['LpcMemberID']);
+        }
+    }
+}
+$grid3->update = false;
+
 // Let the grid create the model
 $grid3->setColModel();
 
