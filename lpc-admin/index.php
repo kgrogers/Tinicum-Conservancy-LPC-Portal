@@ -1,5 +1,5 @@
 <?php
-    session_start();
+    @session_start();
     if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != 'yes') {
         $signedIn['loggedin'] = 'no';
         echo "<h2>You are not authorized to view this page</h2>";
