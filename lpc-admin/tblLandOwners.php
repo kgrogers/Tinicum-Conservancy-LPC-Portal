@@ -44,7 +44,6 @@ $grid2->setTable = 'tblLandOwners';
 $grid2->table = 'tblLandOwners';
 $grid2->setPrimaryKeyID('LandOwnerID');
 $grid2->serialKey = true;
-$lastInsertID = "none set";
 if ($grid2->oper == 'add') {
     $data = filter_input_array(INPUT_POST);
     if ($grid2->insert($data)) {
