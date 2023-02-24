@@ -104,8 +104,9 @@ $sql = "
           o.LPC = t.LpcID
     ORDER BY o.LastName";
 $grid2->setSelect("CurrentlyAssignedTo", $sql, false, true, false, array(""=>""));
+$grid2->setSelect("LandOwnerState","select PO, State from tblStates order by 2",false,true,false);
 $grid2->navigator = true;
-$grid2->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
+$grid2->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>false,"view"=>true, "search"=>true, "cloneToTop"=>true));
 $grid2->setNavOptions('edit',array("height"=>"auto","dataheight"=>"auto","width"=>700,"closeAfterEdit"=>true));
 $grid2->setNavOptions('add',array("height"=>"auto","dataheight"=>"auto","width"=>"auto","closeAfterAdd"=>true));
 $grid2->setNavOptions('view',array("top"=>30,"left"=>30,"height"=>"auto","dataheight"=>"auto","width"=>800,"labelswidth"=>"20%"));

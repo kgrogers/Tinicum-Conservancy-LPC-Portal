@@ -70,11 +70,10 @@ $grid3->setColProperty("username",array("label"=>"User Name"));
 $grid3->setColProperty("password",array("label"=>"Encrypted Password"));
 
 $cid = jqGridUtils::GetParam('LpcMemberID');
-// $cid = $conn->lastInsertId();
-// $grid3->setAfterCrudAction("add","insert into tblMemberCreds (LpcMemberID) values(?)",array($cid));
 
 // Enable filter toolbar searching
 $grid3->toolbarfilter = true;
+
 // Enable operation search
 $grid3->setFilterOptions(array("searchOperators"=>true));
 

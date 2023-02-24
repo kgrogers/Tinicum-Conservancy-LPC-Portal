@@ -49,28 +49,13 @@ $grid5->setUrl('tblWatersheds.php');
 
 // Change some property of the field(s)
 $grid5->setColProperty("WatershedID", array("width"=>"40","editable"=>false,"hidden"=>false));
-// $grid5->setColProperty("LandOwnerNotes", array("label"=>"Landowner Notes","width"=>"200", "searchoptions"=>array("sopt"=>array('cn','bw','bn','nc')),"edittype"=>"textarea", "editoptions"=>array("rows"=>5, "cols"=>80),"editrules"=>array("required"=>true)));
-// $grid5->setColProperty("Status", array("required"=>true));
-// $grid5->setColProperty("CurrentlyAssignedTo", array("required"=>true));
 
 // Enable filter toolbar searching
 $grid5->toolbarfilter = true;
 // Enable operation search
 $grid5->setFilterOptions(array("searchOperators"=>true));
-
-// $grid5->setSelect("ContactMode", "SELECT DISTINCT ContactModeID, ContactMode as CM FROM tblContactModes ORDER BY 2", false, true, false, array(""=>"Select Mode..."));
-// $grid5->setSelect("LandOwnerID", "SELECT DISTINCT LandOwnerID, LandOwner FROM tblLandOwners as LO ORDER BY 2", false, true, false, array(""=>"Select land owner..."));
-// $sql = "
-    // SELECT distinct LpcMemberID,
-           // case
-               // when LastName = 'UNASSIGNED' then LastName
-               // else concat(FirstName,' ',LastName)
-           // end CB
-    // FROM tblLpcMembers
-    // ORDER BY 2";
-// $grid5->setSelect("ContactedBy", $sql, false, true, false, array(""=>""));
 $grid5->navigator = true;
-$grid5->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));
+$grid5->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>false,"view"=>true, "search"=>true, "cloneToTop"=>true));
 $grid5->setNavOptions('edit',array("height"=>"auto","dataheight"=>"auto","width"=>700,"closeAfterEdit"=>true));
 $grid5->setNavOptions('add',array("height"=>"auto","dataheight"=>"auto","width"=>"auto","closeAfterAdd"=>true));
 $grid5->setNavOptions('view',array("top"=>30,"left"=>30,"height"=>"auto","dataheight"=>"auto","width"=>800,"labelswidth"=>"20%"));
