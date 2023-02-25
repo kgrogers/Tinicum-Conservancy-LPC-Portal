@@ -47,7 +47,27 @@ if ($grid3->oper == 'edit') {
                field for all LandOwners that used to be
                assigned to this member.
             */
-            $conn->query("update tblLandOwners set CurrentlyAssignedTo = 38 where CurrentlyAssignedTo = ".$data['LpcMemberID']);
+            switch ($data['LPC']) {
+                case 1:
+                    $nlpc = 37;
+                    break;
+                case 3:
+                    $nlpc = 36;
+                    break;
+                case 4:
+                    $nlpc = 22;
+                    break;
+                case 5:
+                    $nlpc = 35;
+                    break;
+                default:
+                    $nlpc = 38;
+            }
+            $conn->query("update tblLandOwners set CurrentlyAssignedTo = ".$nlpc." where CurrentlyAssignedTo = ".$data['LpcMemberID']);
+            // $fh = fopen("/tmp/lpcmember.txt","w");
+            // fwrite($fh,"data ".print_r($data,true)."\n");
+            // fwrite($fh,"New LpcID: ".$nlpc."\n");
+            // fclose($fh);
         }
     }
 }
