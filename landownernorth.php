@@ -11,7 +11,7 @@
     $db = opendb('MySQL','tinicum');
     $sql = "
         select l.LandOwner 'Land Owner',
-               concat(m.FirstName, ' ', m.LastName) 'Assigned To',
+               concat(m.FirstName, ' ', m.LastName,' (',t.LPC,')') 'Assigned To',
                s.Status,
                l.HowToContact 'How To Contact',
                l.LandOwnerNotes 'Land Owner Notes',
@@ -24,9 +24,11 @@
                l.AddressedTo ma_AddressedTo
         from tblLandOwners l,
              tblLpcMembers m,
-             tblLandOwnerStatus s
+             tblLandOwnerStatus s,
+             tblLpcType t
         where l.CurrentlyAssignedTo = m.LpcMemberID and
               l.Status = s.StatusID and
+              t.LpcID = m.LPC and
               l.LandOwnerID = :loid";
     $stmt = $db->prepare($sql);
     $stmt->execute(array(':loid' => $lndonrID));
