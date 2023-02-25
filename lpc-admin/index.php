@@ -74,6 +74,7 @@
                 <li><a href="#LpcType">LPC Type</a></li>
                 <li><a href="#Watershed">Watersheds</a></li>
                 <li><a href="#LandUse">Land Uses</a></li>
+                <li><a href="#MemberActivity">Member Activity</a></li>
             </ul>
             <div id="ContactNotes" class="mtab active" style="display:block;">
                 <?php include("tblContactNotes.php"); ?>
@@ -101,6 +102,9 @@
             </div>
             <div id="LpcType" class="mtab" style="display:none;">
                 <?php include("tblLpcType.php"); ?>
+            </div>
+            <div id="MemberActivity" class="mtab" style="display:none;">
+                <?php include("tblMemberActivity.php"); ?>
             </div>
         <!--    <div id="memcreds" class="mtab" style="display:none;">
                 <?php include("tblMemberCreds.php"); ?>
