@@ -42,8 +42,8 @@
             $_SESSION['username'] = $usrData['username'];
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
-            $_SESSION['pwfailcnt'] += 1;
-            if ($_SESSION['pwfailcnt'] > 3) {
+            $_SESSION['pwdfailcnt'] += 1;
+            if ($_SESSION['pwdfailcnt'] > 3) {
                 $_SESSION['loggedin'] = 'too many bad';
             }
             $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"login",":now"=>date('Y-m-d H:i:s'),":result"=>"pwfail"));
