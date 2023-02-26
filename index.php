@@ -408,7 +408,7 @@
                         }
                         if (retData['loggedin'] == 'pwfail') {
                             // console.log("Password is wrong!");
-                            alert('Wrong userid or password - Did you already register? If so, try again.');
+                            alert('Wrong userid or password - Did you already register? If so, try again. If you forgot your password, please register again.');
                             $('#InputPassword1').val('');
                         }
                         if (retData['loggedin'] == 'missingEmail') {
