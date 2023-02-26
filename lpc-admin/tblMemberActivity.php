@@ -41,6 +41,18 @@ $grid11->serialKey = true;
 // Let the grid create the model
 $grid11->setColModel();
 
+$tooltip = <<<TP
+function(rowid, value, rawObject, colModel, arraydata) {
+    var ts = Date.parse(value);
+    var a = new Date(ts);
+    var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    var mos  = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var t = days[a.getDay()]+', '+mos[a.getMonth()]+' '+a.getDate();
+    return 'title="'+t+'"';
+}
+TP;
+$grid11->setColProperty('occurredAt ('.$tz.')',array("cellattr"=>"js:".$tooltip));
+
 // Set some grid options
 $grid11->setGridOptions(array(
     "rowNum"=>40,
