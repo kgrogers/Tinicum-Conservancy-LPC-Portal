@@ -8,8 +8,10 @@ require_once ABSPATH."php/PHPSuito/DBdrivers/jqGridPdo.php";
 $date = new DateTime('now', new DateTimeZone('US/Eastern'));
 if ($date->format('I') == 0) {
     $tzoffset = "\-05:00";
+    $tz = "EST";
 } else {
     $tzoffset = "\-04:00";
+    $tz = "EDT";
 }
 
 // Connection to the server
@@ -25,7 +27,7 @@ $grid11->SelectCommand = "
     select a.idx,
            concat(m.FirstName,' ',m.LastName) Name,
            activity,
-           convert_tz(occurredAt,'+00:00','".$tzoffset."') 'occurredAt (EST)',
+           convert_tz(occurredAt,'+00:00','".$tzoffset."') 'occurredAt (".$tz.")',
            result
     from tblMemberActivity a,
          tblLpcMembers m
