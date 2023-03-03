@@ -6,6 +6,12 @@
         $signedIn = $_SESSION;
         $_SESSION['LandOwnerID'] = '';
     }
+    include "sqlPDO.php";
+    $db = opendb('MySQL','tinicum');
+    foreach ($db->query("select LpcID,LPC from tblLpcType order by 1") as $row) {
+        $LpcList[$row['LpcID']] = $row['LPC'];
+    }
+    unset($db);
 ?>
 <!doctype html>
 <html lang="en">
@@ -96,6 +102,9 @@
             cursor: pointer;
             text-decoration: underline;
         }
+        .rh {
+            display:none;
+        }
         #newNote {
             display: none;
         }
@@ -126,6 +135,8 @@
         var testVar = '';
         var LandOwnerData = '';
         var lcpmodeselect = '';
+        var LpcList = <?php print json_encode($LpcList); ?>;
+        
         // $.cookie('TC_uname','rogeke5', {expires: 30})
         // console.log("SIGNEDIN Before doc.ready:", SIGNEDIN);
                 
@@ -200,27 +211,61 @@
                 // e.preventDefault();
             // });
             $('#b_action').on('click', function(e) {
-                // console.log("Action button clicked");
-                if (SIGNEDIN['permission'] !='root') {
-                    $('a#adminpage').hide();
+                // console.log(SIGNEDIN);
+                switch(SIGNEDIN['permission']) {
+                    case "user":
+                        $('a#adminpage').hide();
+                        break;
+                    case "lpchead":
+                        $('a#adminpage').hide();
+                        $('a#'+LpcList[SIGNEDIN['mLPC']]).show();
+                        break;
+                    case "root":
+                        $('.rh').show();
+                        break;
+                }
+                if (SIGNEDIN['numLandOwners'] > 0) {
+                    $('a#propreport').show();
+                } else {
+                    $('a#propreport').hide();
                 }
                 if (SIGNEDIN['LandOwnerID'] == 0) {
                     $('a#propreport1').hide();
+                    // $('a#propreport').hide();
                 }
                 $('ul.dropdown-menu').toggle();
             });
             $('a.dropdown-item').on('click', function(e) {
                 // console.log($(this).html());
                 $('ul.dropdown-menu').toggle();
-                if ($(this).html() == "Open Admin Page") {
-                    window.open('/lpc-admin');
-                } else if ($(this).html() == "Logoff") {
-                    // console.log('logoff now');
-                    window.open('logout.php', "_self");                    
-                } else if ($(this).html() == "My Landowners Report") {
-                    window.open('membersReport.php','_blank');
-                } else if ($(this).html() == "This Landowner Report") {
-                    window.open('memberReport.php','_blank');
+                switch($(this).html()) {
+                    case "Open Admin Page":
+                        window.open('/lpc-admin');
+                        break;
+                    case "Logoff":
+                        window.open('logout.php', "_self");
+                        break;
+                    case "My Landowners Report":
+                        window.open('membersReport.php?rpt=MY','_blank');
+                        break;
+                    case "This Landowner Report":
+                        window.open('memberReport.php','_blank');
+                        break;
+                    case "Bridgeton Landowners Report":
+                        SIGNEDIN['reportType'] = 'BR';
+                        window.open('membersReport.php?rpt=BR','_blank');
+                        break;
+                    case "Nockamixon Landowners Report":
+                        SIGNEDIN['reportType'] = 'NX';
+                        window.open('membersReport.php?rpt=NX','_blank');
+                        break;
+                    case "Tinicum Landowners Report":
+                        SIGNEDIN['reportType'] = 'TT';
+                        window.open('membersReport.php?rpt=TT','_blank');
+                        break;
+                    case "All Landowners Report":
+                        window.open('membersReport.php?rpt=ALL','_blank');
+                        break;
                 }
             });
             $('#LandOwnerListQuestion').hover(function() {
@@ -557,10 +602,14 @@
                     <h1 class="h2"><img src="/images/tinicum-logo-encircled-TRANSPARENT.png" id="tlogo" class="pe-1">Land Owner Information</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
                         <button id="b_action" type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle">Actions</button>
-                            <ul class="dropdown-menu" style="transform: translate(-97px, 38px)">
+                            <ul class="dropdown-menu" style="transform: translate(-186px, 38px)">
                                 <li><a id="adminpage" class="dropdown-item" href="#">Open Admin Page</a></li>
                                 <li><a id="propreport" class="dropdown-item" href="#">My Landowners Report</a></li>
                                 <li><a id="propreport1" class="dropdown-item" href="#">This Landowner Report</a></li>
+                                <li><a id="BR" class="dropdown-item rh" href="#">Bridgeton Landowners Report</a></li>
+                                <li><a id="NX" class="dropdown-item rh" href="#">Nockamixon Landowners Report</a></li>
+                                <li><a id="TT" class="dropdown-item rh" href="#">Tinicum Landowners Report</a></li>
+                                <li><a id="allReport" class="dropdown-item rh" href="#">All Landowners Report</a></li>
                                 <li><a id="logoff" class="dropdown-item" href="#">Logoff</a></li>
                             </ul>
 

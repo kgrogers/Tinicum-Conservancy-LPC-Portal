@@ -1,84 +1,173 @@
 <?php
     @session_start();
-    $memid = $_SESSION['LpcMemberID'];
+    $memid = (int)$_SESSION['LpcMemberID'];
     $mLPC = (int)$_SESSION['mLPC'];
+    $rpt = $_GET['rpt'];
+    $permission = $_SESSION['permission'];
     // print("<pre>".print_r($_SESSION,true).".</pre>");
 
     require('mc_table.php');
     require('sqlPDO.php');
-
-    $db = opendb('MySQL','tinicum');
-    // Get Member's contact information
-    $sql = "
-        select m.FirstName,
-               m.LastName,
-               t.LPC
-        from tblLpcMembers m,
-             tblLpcType t
-        where m.LpcMemberID = :memberID and
-              m.LPC = t.LpcID";
-    $memberInfo = $db->prepare($sql);
     
-    // Get member's list of Landowners
-    $sql = "
-        select l.LandOwnerID,
-               l.LandOwner,
-               l.LandOwnerNotes,
-               s.Status,
-               l.HowToContact,
-               l.LandOwnerAddress1,
-               l.LandOwnerAddress2,
-               l.LandOwnerCity,
-               l.LandOwnerState,
-               l.LandOwnerZip
-        from tblLandOwners l,
-             tblLandOwnerStatus s
-        where CurrentlyAssignedTo = :memberID and
-              l.Status = s.StatusID
-        order by l.LandOwner";
+    $db = opendb('MySQL','tinicum');
 
-    $landownerInfo = $db->prepare($sql);
+    if ($rpt) {
+        // Get list of Landowners for the LPC in $rpt
+        if ($rpt == "BR" or $rpt == "NX" or $rpt == "TT") {
+            $losql = "
+                select l.LandOwnerID,
+                    l.CurrentlyAssignedTo,
+                    concat(m.FirstName,' ',m.LastName,' (',t.LPC,')') as Member,
+                    l.LandOwner,
+                    l.LandOwnerNotes,
+                    s.Status,
+                    l.HowToContact,
+                    l.LandOwnerAddress1,
+                    l.LandOwnerAddress2,
+                    l.LandOwnerCity,
+                    l.LandOwnerState,
+                    l.LandOwnerZip
+                from tblLandOwners l,
+                    tblLandOwnerStatus s,
+                    tblLpcMembers m,
+                    tblLpcType t
+                where l.Status = s.StatusID and
+                      l.CurrentlyAssignedTo = m.LpcMemberID and
+                      t.LpcID = m.LPC and
+                      l.LandOwnerID in (
+                          select distinct LandOwnerID
+                          from tblParcels p,
+                              tblLpcType l
+                          where p.LPC = l.LpcID and
+                              l.LPC = :LPC
+                      )
+                order by l.LandOwner";
+        } elseif ($rpt == "ALL") {
+            $losql = "
+                select l.LandOwnerID,
+                       l.CurrentlyAssignedTo,
+                       concat(m.FirstName,' ',m.LastName,' (',t.LPC,')') as Member,
+                       l.LandOwner,
+                       l.LandOwnerNotes,
+                       s.Status,
+                       l.HowToContact,
+                       l.LandOwnerAddress1,
+                       l.LandOwnerAddress2,
+                       l.LandOwnerCity,
+                       l.LandOwnerState,
+                       l.LandOwnerZip
+                from tblLandOwners l,
+                     tblLandOwnerStatus s,
+                     tblLpcMembers m,
+                     tblLpcType t
+                where l.Status = s.StatusID and
+                      l.CurrentlyAssignedTo = m.LpcMemberID and
+                      t.LpcID = m.LPC and
+                      l.LandOwnerID in (
+                          select distinct LandOwnerID
+                          from tblParcels
+                      )
+                order by l.LandOwner";
+        } elseif ($rpt == "MY") {
+            $losql = "
+                select l.LandOwnerID,
+                    l.CurrentlyAssignedTo,
+                    concat(m.FirstName,' ',m.LastName,' (',t.LPC,')') as Member,
+                    l.LandOwner,
+                    l.LandOwnerNotes,
+                    s.Status,
+                    l.HowToContact,
+                    l.LandOwnerAddress1,
+                    l.LandOwnerAddress2,
+                    l.LandOwnerCity,
+                    l.LandOwnerState,
+                    l.LandOwnerZip
+                from tblLandOwners l,
+                    tblLandOwnerStatus s,
+                    tblLpcMembers m,
+                    tblLpcType t
+                where l.Status = s.StatusID and
+                      l.CurrentlyAssignedTo = m.LpcMemberID and
+                      t.LpcID = m.LPC and
+                      l.LandOwnerID in (
+                          select distinct LandOwnerID
+                          from tblLandOwners
+                          where CurrentlyAssignedTo = :memberID
+                      )
+                order by l.LandOwner";
+        }
+    } /*else {
+        // // Get Member's contact information
+        // $sql = "
+            // select m.FirstName,
+                // m.LastName,
+                // t.LPC
+            // from tblLpcMembers m,
+                // tblLpcType t
+            // where m.LpcMemberID = :memberID and
+                // m.LPC = t.LpcID";
+        // $memberInfo = $db->prepare($sql);
+
+        // Get member's list of Landowners
+        $sql = "
+            select l.LandOwnerID,
+                   l.LandOwner,
+                   l.LandOwnerNotes,
+                   s.Status,
+                   l.HowToContact,
+                   l.LandOwnerAddress1,
+                   l.LandOwnerAddress2,
+                   l.LandOwnerCity,
+                   l.LandOwnerState,
+                   l.LandOwnerZip
+            from tblLandOwners l,
+                 tblLandOwnerStatus s
+            where CurrentlyAssignedTo = :memberID and
+                  l.Status = s.StatusID
+            order by l.LandOwner";
+    } */
+    $landownerInfo = $db->prepare($losql);
     
     // Get parcel information for specific landowner
-    // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true
-    if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {
+    // Note: ContiguousParcels,GasLease and DisqualifyingUses are booleen: 0 = false and 1 = true    
+    if ($permission != 'root' and $permission != 'user') {
         $sql = "
             select p.ParcelNum,
-                p.Acres,
-                p.DeededTo,
-                p.ParcelRoadNum,
-                p.ParcelRoad,
-                p.ParcelCity,
-                p.ParcelState,
-                p.ParcelZip,
-                w.Watershed,
-                p.ContiguousParcels,
-                p.GasLease,
-                p.DisqualifyingUses
+                   p.Acres,
+                   p.DeededTo,
+                   p.ParcelRoadNum,
+                   p.ParcelRoad,
+                   p.ParcelCity,
+                   p.ParcelState,
+                   p.ParcelZip,
+                   w.Watershed,
+                   p.ContiguousParcels,
+                   p.GasLease,
+                   p.DisqualifyingUses
             from tblParcels p,
-                tblWatersheds w
+                 tblWatersheds w
             where p.LandownerID = :loid and
-                p.WatershedID = w.WatershedID and
-                p.LPC = :mLPC
+                  p.WatershedID = w.WatershedID and
+                  p.LPC = :mLPC
             order by p.Acres desc";
     } else {
         $sql = "
             select p.ParcelNum,
-                p.Acres,
-                p.DeededTo,
-                p.ParcelRoadNum,
-                p.ParcelRoad,
-                p.ParcelCity,
-                p.ParcelState,
-                p.ParcelZip,
-                w.Watershed,
-                p.ContiguousParcels,
-                p.GasLease,
-                p.DisqualifyingUses
+                   p.Acres,
+                   p.DeededTo,
+                   p.ParcelRoadNum,
+                   p.ParcelRoad,
+                   p.ParcelCity,
+                   p.ParcelState,
+                   p.ParcelZip,
+                   w.Watershed,
+                   p.ContiguousParcels,
+                   p.GasLease,
+                   p.DisqualifyingUses
             from tblParcels p,
-                tblWatersheds w
+                 tblWatersheds w
             where p.LandownerID = :loid and
-                p.WatershedID = w.WatershedID
+                  p.WatershedID = w.WatershedID
             order by p.Acres desc";
     }
     $parcels = $db->prepare($sql);
@@ -103,12 +192,27 @@
         order by ContactDate desc";
     $cn = $db->prepare($sql);
 
-    // Build report for specific member's landowners
-    $memberInfo->execute(array(":memberID"=>$memid));
-    $member = $memberInfo->fetch(PDO::FETCH_ASSOC);
-    
-    $landownerInfo->execute(array(":memberID"=>$memid));
-    $lo = $landownerInfo->fetchall(PDO::FETCH_ASSOC);
+    // echo "<script>console.log('rpt: '+$rpt); </script>";
+    switch ($rpt) {
+        case "MY":
+            // $memberInfo->execute(array(":memberID"=>$memid));
+            // $member = $memberInfo->fetch(PDO::FETCH_ASSOC);
+            // echo '<pre>'.$losql.'\n'.$memid.'</pre>';
+            $landownerInfo->execute(array(":memberID"=>$memid));
+            $lo = $landownerInfo->fetchall(PDO::FETCH_ASSOC);
+            break;
+        case "BR":
+        case "NX":
+        case "TT":
+            $landownerInfo->execute(array(":LPC"=>$rpt));
+            $lo = $landownerInfo->fetchall(PDO::FETCH_ASSOC);
+            break;
+        case "ALL":
+            $landownerInfo->execute();
+            $lo = $landownerInfo->fetchall(PDO::FETCH_ASSOC);
+            break;
+    }
+        
     if (count($lo) == 0) {
         print("<h2><b>You do not have any Landowners assigned to you</b></h2>");
         exit;
@@ -124,13 +228,15 @@
         if ($row['LandOwnerAddress2']!="") {
             $header[] = array(
                 $row['Status'],
-                $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")",
+                // $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")",
+                $row['Member'],
                 $row['LandOwnerAddress1']." ".$row['LandOwnerAddress2']." ".chr(149)." ".$row['LandOwnerCity'].', '.$row['LandOwnerState']." ".$row['LandOwnerZip']
             );
         } else {
             $header[] = array(
                 $row['Status'],
-                $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")",
+                // $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")",
+                $row['Member'],
                 $row['LandOwnerAddress1'].' '.chr(149).' '.$row['LandOwnerCity'].', '.$row['LandOwnerState']." ".$row['LandOwnerZip']
             );
         }
@@ -138,7 +244,7 @@
         $header[] = $row['LandOwnerNotes'];
     
         // $row['LandOwnerID'] = 16;
-        if ($_SESSION['permission'] != 'root' and $_SESSION['permission'] != 'user') {
+        if ($permission != 'root' and $permission != 'user') {
             $parcels->execute(array(":loid"=>$row['LandOwnerID'],":mLPC"=>$mLPC));
         } else {
             $parcels->execute(array(":loid"=>$row['LandOwnerID']));
@@ -174,7 +280,8 @@
         };
         // Header variables
         $h_status = $header[0][0];
-        $h_assignedto = $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")";
+        // $h_assignedto = $member['FirstName']." ".$member['LastName']." (".$member['LPC'].")";
+        $h_assignedto = $header[0][1];
         $h_mailingaddress = $header[0][2];
         $h_howtocontact = $header[1];
         $h_parcelnotes = $header[2];

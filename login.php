@@ -30,11 +30,14 @@
         $stmt->execute(array(":uname"=>$userid));
         $usrData = $stmt->fetch(PDO::FETCH_ASSOC);
         if (password_verify($pwd, $usrData['password']) && $userid == $usrData['username']) {
+            $stmt = $db->query("select count(*) from tblLandOwners where currentlyAssignedTo = ".$usrData['LpcMemberID']);
+            $numLandOwners = $stmt->fetch();
             $_SESSION['loggedin'] = 'yes';
             $_SESSION['username'] = $usrData['username'];
             $_SESSION['permission'] = $usrData['permission'];
             $_SESSION['LpcMemberID'] = $usrData['LpcMemberID'];
             $_SESSION['LandOwnerID'] = 0;
+            $_SESSION['numLandOwners'] = $numLandOwners[0];
             $_SESSION['mLPC'] = $usrData['LPC'];
             $actvy->execute(array(":LpcMemberID"=>$usrData['LpcMemberID'],":email"=>"","activity"=>"login",":now"=>date('Y-m-d H:i:s'),":result"=>"success"));
         } else {
