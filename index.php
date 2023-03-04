@@ -136,6 +136,7 @@
         var LandOwnerData = '';
         var lcpmodeselect = '';
         var LpcList = <?php print json_encode($LpcList); ?>;
+        var ThisLandOwner = '';
         
         // $.cookie('TC_uname','rogeke5', {expires: 30})
         // console.log("SIGNEDIN Before doc.ready:", SIGNEDIN);
@@ -248,7 +249,7 @@
                     case "My Landowners Report":
                         window.open('membersReport.php?rpt=MY','_blank');
                         break;
-                    case "This Landowner Report":
+                    case ThisLandOwner:
                         window.open('memberReport.php','_blank');
                         break;
                     case "Bridgeton Landowners Report":
@@ -312,7 +313,9 @@
                 });
             });
             $('#landOwnerList').on('click', 'a', function() {
-                // console.log($(this).attr("loid"));
+                console.log($(this).html().split(',')[0]);
+                ThisLandOwner = $(this).html().split(',')[0]+" Landowner Report"
+                $('#propreport1').html(ThisLandOwner);
                 LOID = parseInt($(this).attr("loid"));
                 SIGNEDIN['LandOwnerID'] = LOID;
                 $('a#propreport1').show();
