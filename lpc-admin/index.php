@@ -75,6 +75,7 @@
                 <li><a href="#Watershed">Watersheds</a></li>
                 <li><a href="#LandUse">Land Uses</a></li>
                 <li><a href="#MemberActivity">Member Activity</a></li>
+                <li><a href="#leaderboard">Leader Board</a></li>
             </ul>
             <div id="ContactNotes" class="mtab active" style="display:block;">
                 <?php include("tblContactNotes.php"); ?>
@@ -106,9 +107,9 @@
             <div id="MemberActivity" class="mtab" style="display:none;">
                 <?php include("tblMemberActivity.php"); ?>
             </div>
-        <!--    <div id="memcreds" class="mtab" style="display:none;">
-                <?php include("tblMemberCreds.php"); ?>
-            </div> -->
+            <div id="leaderboard" class="mtab" style="display:none;">
+                <?php include("leaderboard.php"); ?>
+            </div>
         </div>
     </body>
 </html>
