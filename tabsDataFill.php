@@ -34,7 +34,7 @@
     foreach ($rows as $row) {
         $contactnoteshtml .= '<tr >
                                 <td id="'.$row['ContactNoteID'].'">'.$row['ContactDate'].'</td>
-                                <td>'.$row['ContactedBy'].'</td>
+                                <td class="contactedby">'.$row['ContactedBy'].'</td>
                                 <td>'.$row['ContactMode'].'</td>
                                 <td>'.$row['ContactNote'].'</td>
                                 <td>'.$row['NextStep'].'</td>

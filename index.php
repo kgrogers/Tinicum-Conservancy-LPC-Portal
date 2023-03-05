@@ -105,6 +105,9 @@
         .rh {
             display:none;
         }
+        .bg-solid-white {
+            background-color: whitesmoke !important;
+        }        
         #newNote {
             display: none;
         }
@@ -137,6 +140,7 @@
         var lcpmodeselect = '';
         var LpcList = <?php print json_encode($LpcList); ?>;
         var ThisLandOwner = '';
+        var memPos = '';
         
         // $.cookie('TC_uname','rogeke5', {expires: 30})
         // console.log("SIGNEDIN Before doc.ready:", SIGNEDIN);
@@ -312,6 +316,7 @@
                     $('#newnoteform').trigger('reset');
                 });
             });
+            
             $('#landOwnerList').on('click', 'a', function() {
                 console.log($(this).html().split(',')[0]);
                 ThisLandOwner = $(this).html().split(',')[0]+" Landowner Report"
@@ -357,7 +362,6 @@
                             $(this).prop('title',"ContactNoteID: "+$(this)[0]['id']);
                         }
                     });
-
                 });
                 // console.log("LpcmemberID="+SIGNEDIN['LpcMemberID']);
                 $.ajax({
@@ -375,7 +379,7 @@
                     $('#members').html(lcpmebersselect);
                 });                    
             });
-        
+                    
             $('#regCheck').on('click', function() {
                 if ($('#regCheck').is(':checked')) {
                     $.removeCookie('TC_uname');
@@ -489,6 +493,29 @@
                     $('#signin').prop('disabled', false);
                 }
             });
+            
+            $('#t-contactnotes').on('click', 'td', function() {
+                memPosTop = $(this).offset().top - $(document).scrollTop();
+                memPosLeft = $(this).offset().left;
+                $.ajax({
+                    url: 'getMemberInfo.php',
+                    method: 'post',
+                    dataType: 'json',
+                    data: {
+                        fname: $(this).html().split(' ')[0],
+                        lname: $(this).html().split(' ')[1]
+                    }
+                })
+                .success(function(retData) {
+                    // console.log(console.log('top: '+memPos['top']+', left: '+memPos['left']));
+                    $('.toast').css('top',memPosTop).css('left',memPosLeft);
+                    $('#memName').html(retData['Name']);
+                    $('#smemLPC').html('LPC: '+retData['LpcDescription']);
+                    $('#smemPhone').html('Phone: '+retData['Phone']);
+                    $('#smemEmail').html('email: '+retData['eMail']);
+                    $('#toastMemData').toast('show');
+                });
+            });
         });
     </script>
 </head>
@@ -591,7 +618,6 @@
 
         </form>
     </div>
-
     <div class="container-fluid" id="ContainerDash" style="display:none;">
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
@@ -723,6 +749,17 @@
                     </div>
                 </div>
             </main>
+        </div>
+    </div>
+    <div role="alert" aria-live="assertive" aria-atomic="true" style="position: relative; min-height: 200px;">
+        <div id="toastMemData" class="toast bg-solid-white"  data-bs-autohide="false" style="position: fixed; top: 0; left: 0;">
+            <div class="toast-header">
+                <strong class="mr-auto" id="memName"></strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body p-1" id="smemLPC"></div>
+            <div class="toast-body p-1" id="smemPhone"></div>
+            <div class="toast-body p-1" id="smemEmail"></div>
         </div>
     </div>
     <script src="/bootstrap5/assets/dist/js/bootstrap.bundle.min.js"></script>
