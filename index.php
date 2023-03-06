@@ -108,6 +108,9 @@
         .bg-solid-white {
             background-color: whitesmoke !important;
         }        
+        .contactedby {
+            cursor: pointer;
+        }
         #newNote {
             display: none;
         }
@@ -509,8 +512,7 @@
                 .success(function(retData) {
                     // console.log(console.log('top: '+memPos['top']+', left: '+memPos['left']));
                     $('.toast').css('top',memPosTop).css('left',memPosLeft);
-                    $('#memName').html(retData['Name']);
-                    $('#smemLPC').html('LPC: '+retData['LpcDescription']);
+                    $('#memName').html(retData['Name']+' - '+retData['LpcDescription']);
                     $('#smemPhone').html('Phone: '+retData['Phone']);
                     $('#smemEmail').html('email: '+retData['eMail']);
                     $('#toastMemData').toast('show');
@@ -754,7 +756,7 @@
     <div role="alert" aria-live="assertive" aria-atomic="true" style="position: relative; min-height: 200px;">
         <div id="toastMemData" class="toast bg-solid-white"  data-bs-autohide="false" style="position: fixed; top: 0; left: 0;">
             <div class="toast-header">
-                <strong class="mr-auto" id="memName"></strong>
+                <strong class="me-auto" id="memName"></strong>
                 <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
             <div class="toast-body p-1" id="smemLPC"></div>
