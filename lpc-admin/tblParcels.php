@@ -71,6 +71,7 @@ $grid4->toolbarfilter = true;
 // Enable operation search
 $grid4->setFilterOptions(array("searchOperators"=>true));
 
+$grid4->setSelect("LandOwner","SELECT LandOwnerID, LandOwner from tblLandOwners order by 2", false, true, false);
 $grid4->setSelect("Watershed", "SELECT WatershedID, Watershed FROM tblWatersheds ORDER BY 2", false, true, false);
 $grid4->setSelect("LandUse", "SELECT LandUseID, LandUse FROM tblLandUses ORDER BY 2", false, true, false);
 $grid4->setSelect("ContiguousParcels",array(0=>"No",1=>"Yes"),false,true,false,);
