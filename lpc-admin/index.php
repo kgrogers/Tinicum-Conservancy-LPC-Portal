@@ -7,6 +7,41 @@
     } else {
         $signedIn = $_SESSION;
     }
+    include "sqlPDO.php";
+    $db = opendb('MySQL','tinicum');
+    
+    $sql = "
+        select LpcID,
+               concat(LPC,' - ',LpcDescription) as LPC
+        from tblLpcType
+        order by LpcID";
+    $LPChtml = array();
+    foreach ($db->query($sql) as $row) {
+        $LPChtml[strval($row['LpcID'])] = $row['LPC'];
+    }
+    
+    $sql = "
+        select distinct year(ContactDate) year
+        from tblContactNotes
+        where year(ContactDate) > 0
+        order by 1";
+    $Yearhtml = array();
+    foreach ($db->query($sql) as $row) {
+        $Yearhtml[strval($row['year'])] = $row['year'];
+    }
+    
+    $sql = "
+        select distinct month(ContactDate) monthnum,
+               date_format(ContactDate,'%M') monthname               
+        from tblContactNotes
+        where month(ContactDate) > 0
+        order by 1";
+    $Monthhtml = array();
+    foreach ($db->query($sql) as $row) {
+        $Monthhtml[strval($row['monthnum'])] = $row['monthname'];
+    }
+
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,6 +74,10 @@
         <script src="/jqSuite/js/jquery.min.js" type="text/javascript"></script>
         <script src="/jqSuite/js/trirand/i18n/grid.locale-en.js" type="text/javascript"></script>
         <script src="/jqSuite/js/trirand/jquery.jqGrid.min.js" type="text/javascript"></script>
+        <!-- Files for the export ---------------------->
+        <script type="text/javascript" language="javascript" src="/js/pivotExport/pdfmake.min.js"></script>
+        <script type="text/javascript" language="javascript" src="/js/pivotExport/vfs_fonts.js"></script>
+        <script type="text/javascript" language="javascript" src="/js/pivotExport/jszip.min.js"></script>
         <script type="text/javascript">         
             $.jgrid.no_legacy_api = true;
             $.jgrid.useJSON = true;
@@ -46,6 +85,10 @@
         </script>
         <script src="/jqSuite/js/jquery-ui.min.js" type="text/javascript"></script>
         <script>
+            var LPChtml = <?php print(json_encode($LPChtml)); ?>;
+            var Yearhtml = <?php print(json_encode($Yearhtml)); ?>;
+            var Monthhtml = <?php print(json_encode($Monthhtml)); ?>;
+            
             $(document).ready(function(){
                 $(".mtabs-list li a").click(function(e){
                     e.preventDefault();
@@ -57,6 +100,30 @@
                     $(".mtab").hide();   // hiding open tab
                     $(tabid).show();    // show tab
                     $(this).addClass("active"); //  adding active class to clicked tab
+                });
+                
+                $.each(LPChtml, function(val, text) {
+                    // console.log("val: "+val+" text: "+text);
+                    $('#LPC').append($("<option></option>").attr("value",val).text(text));
+                });
+
+                $.each(Yearhtml, function(val, text) {
+                    // console.log("val: "+val+" text: "+text);
+                    $('#year').append($("<option></option>").attr("value",val).text(text));
+                });
+
+                $.each(Monthhtml, function(val, text) {
+                    // console.log("val: "+val+" text: "+text);
+                    $('#month').append($("<option></option>").attr("value",val).text(text));
+                });
+                
+                $('#search').on('click', function() {
+                    var slpc = $('#LPC').find(':selected').val();
+                    var syr = $('#year').find(':selected').val();
+                    var smo = $('#month').find(':selected').val();
+                    console.log('VARS: slpc='+slpc+', syr='+syr+', smo='+smo);
+                    $('#pivot').jqGrid('setGridParam', {postData:{'LPC':slpc,'year':syr,'month':smo}, search: true});
+                    $('pivot').trigger('reloadGrid');
                 });
             });
         </script>
@@ -108,6 +175,24 @@
                 <?php include("tblMemberActivity.php"); ?>
             </div>
             <div id="leaderboard" class="mtab" style="display:none;">
+                <div id="selectLPC">
+                    <form action="#">
+                        <label for="LPC">LPC:</label>
+                        <select id="LPC" name="LPC">
+                            <option value='%'>All</option>
+                        </select>
+                        <label for="year">Year:</label>
+                        <select id="year" name="year">
+                            <option value='%'>All</option>
+                        </select>
+                        <label for="year">Month:</label>
+                        <select id="month" name="month">
+                            <option value='%'>All</option>
+                        </select>
+                        <input id="search" type="button" value="Search"></input>
+                    </form>
+                    <br />
+                </div>
                 <?php include("leaderboard.php"); ?>
             </div>
         </div>

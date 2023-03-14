@@ -10,30 +10,65 @@
     $db->query("SET NAMES utf8");
 
     $pivot = new jqPivotGrid($db);
-    $pivot->SelectCommand = "
-        SELECT concat(lm.LastName,', ',lm.FirstName) as ContactedBy,
-               lo.LandOwner,
-               cn.ContactDate,
-               case cn.ContactMode
-                  when 1 then 'Phone'
-                  when 2 then 'Other'
-                  when 3 then 'eMail'
-                  when 4 then 'Face to Face'
-                  when 5 then 'Mail'
-                  when 6 then 'Background'
-                  when 7 then 'no contact info'
-                  when 8 then 'N/A'
-               end as ContactMode,
-               count(*) as total
-        FROM tblContactNotes cn,
-             tblLpcMembers lm,
-             tblLandOwners lo
-        where cn.ContactedBy = lm.LpcMemberID and
-              cn.LandOwnerID = lo.LandOwnerID
-        GROUP BY cn.ContactedBy,
-                 cn.LandOwnerID,
-                 cn.ContactDate,
-                 cn.ContactMode";
+    $search = jqGridUtils::GetParam('_search','false');
+    if($search == 'true') {
+        $slpc   = jqGridUtils::GetParam('LPC');
+        $syear  = jqGridUtils::GetParam('year');
+        $smonth = jqGridUtils::GetParam('month');
+        $_GET['_search'] = 'false';
+        $pivot->SelectCommand = "
+            SELECT concat(lm.LastName,', ',lm.FirstName) as ContactedBy,
+                lo.LandOwner,
+                cn.ContactDate,
+                case cn.ContactMode
+                    when 1 then 'Phone'
+                    when 2 then 'Other'
+                    when 3 then 'eMail'
+                    when 4 then 'Face to Face'
+                    when 5 then 'Mail'
+                    when 6 then 'Background'
+                    when 7 then 'no contact info'
+                    when 8 then 'N/A'
+                end as ContactMode,
+                count(*) as total
+            FROM tblContactNotes cn,
+                tblLpcMembers lm,
+                tblLandOwners lo
+            where cn.ContactedBy = lm.LpcMemberID and
+                cn.LandOwnerID = lo.LandOwnerID and
+                lm.LPC like '".$slpc."' and
+                year(cn.ContactDate) like '".$syear."' and
+                month(cn.ContactDate) like '".$smonth."'
+            GROUP BY cn.ContactedBy,
+                    cn.LandOwnerID,
+                    cn.ContactDate,
+                    cn.ContactMode";
+    } else {
+        $pivot->SelectCommand = "
+            SELECT concat(lm.LastName,', ',lm.FirstName) as ContactedBy,
+                lo.LandOwner,
+                cn.ContactDate,
+                case cn.ContactMode
+                    when 1 then 'Phone'
+                    when 2 then 'Other'
+                    when 3 then 'eMail'
+                    when 4 then 'Face to Face'
+                    when 5 then 'Mail'
+                    when 6 then 'Background'
+                    when 7 then 'no contact info'
+                    when 8 then 'N/A'
+                end as ContactMode,
+                count(*) as total
+            FROM tblContactNotes cn,
+                tblLpcMembers lm,
+                tblLandOwners lo
+            where cn.ContactedBy = lm.LpcMemberID and
+                cn.LandOwnerID = lo.LandOwnerID
+            GROUP BY cn.ContactedBy,
+                    cn.LandOwnerID,
+                    cn.ContactDate,
+                    cn.ContactMode";
+    }
     
     $pivot->setData('leaderboard.php');
     $pivot->setGridOptions(array(
@@ -77,6 +112,39 @@
 		"rowTotals" => true,
         "colTotals" => true
 	));
-    
+    $pivot->navigator = true;
+    $pivot->setNavOptions('navigator', array("excel"=>false,"add"=>false,"edit"=>false,"view"=>false,"search"=>false,"reload"=>false));
+    $buttonoptions = array(
+        "#pager12",array(
+            "caption"=>"Csv",
+            "title"=>"Local Export to CSV",
+            "onClickButton"=>"js: function(){
+                jQuery('#grid12').jqGrid('exportToCsv');
+            }"
+        )
+    );
+    $pivot->callGridMethod("#grid12", "navButtonAdd", $buttonoptions,1000);
+
+    $buttonoptions = array(
+        "#pager12",array(
+            "caption"=>"Excel",
+            "title"=>"Local Export to Escel",
+            "onClickButton"=>"js: function(){
+                jQuery('#grid12').jqGrid('exportToExcel');
+            }"
+        )
+    );
+    $pivot->callGridMethod("#grid12", "navButtonAdd", $buttonoptions,500);
+    $buttonoptions = array(
+        "#pager12", array(
+            "caption"=>"Pdf",
+            "title"=>"Local Export to PDF",
+            "onClickButton"=>"js: function(){
+                jQuery('#grid12').jqGrid('exportToPdf');
+            }"
+        )
+    );
+    $pivot->callGridMethod("#grid12", "navButtonAdd", $buttonoptions,500);
+
 	$pivot->renderPivot("#grid12","#pager12", true, null, true, true);
 ?>
