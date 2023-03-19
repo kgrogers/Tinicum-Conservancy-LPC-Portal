@@ -11,13 +11,12 @@
     $db = opendb('MySQL','tinicum');
     
     $sql = "
-        select LpcID,
-               concat(LPC,' - ',LpcDescription) as LPC
+        select LpcDescription
         from tblLpcType
         order by LpcID";
     $LPChtml = array();
     foreach ($db->query($sql) as $row) {
-        $LPChtml[strval($row['LpcID'])] = $row['LPC'];
+        $LPChtml[strval($row['LpcDescription'])] = $row['LpcDescription'];
     }
     
     $sql = "
@@ -46,7 +45,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Contact Notes</title>
+        <title>Administrative Page</title>
         <link rel="stylesheet" type="text/css" media="screen" href="/jqSuite/css/jquery-ui.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="/jqSuite/css/trirand/ui.jqgrid.css" />
         <link rel="stylesheet" type="text/css" media="screen" href="/jqSuite/css/ui.multiselect.css" />
@@ -117,14 +116,79 @@
                     $('#month').append($("<option></option>").attr("value",val).text(text));
                 });
                 
-                $('#search').on('click', function() {
-                    var slpc = $('#LPC').find(':selected').val();
-                    var syr = $('#year').find(':selected').val();
-                    var smo = $('#month').find(':selected').val();
-                    console.log('VARS: slpc='+slpc+', syr='+syr+', smo='+smo);
-                    $('#pivot').jqGrid('setGridParam', {postData:{'LPC':slpc,'year':syr,'month':smo}, search: true});
-                    $('pivot').trigger('reloadGrid');
+/***************************************************************************************************************************************/
+                function buildCustomSearch( rule_arr, group ){
+                    if(group === undefined) {
+                        group = "AND";
+                    }
+                    var ruleGroup = "";
+                    if(Array.isArray(rule_arr) && rule_arr.length) 
+                    {
+                        ruleGroup = "{\"groupOp\":\"" + group + "\",\"rules\":[";
+                        var gi=0;
+                        $.each(rule_arr,function(i,n){
+                            if (gi > 0) {ruleGroup += ",";}
+                            ruleGroup += "{\"field\":\"" + n.name + "\",";
+                            ruleGroup += "\"op\":\"" + n.oper + "\",";
+                            ruleGroup += "\"data\":\"" + n.val.replace(/\\/g,'\\\\').replace(/\"/g,'\\"') + "\"}";
+                            gi++;
+                        });
+                        ruleGroup += "]}";
+                        console.log(ruleGroup);
+                    }
+                    return ruleGroup;
+                }
+                var grid = $("#grid12");
+                $("#do_search").on('click',function(){
+                    console.log("Search was clicked - val is "+$("#year").val());
+                    var my_fld=[]; 
+                    /*
+                    *opts : ['eq'=>'equal','ne'=>'not equal','lt'=>'less','le'=>'less or equal','gt'=>'greater','ge'=>'greater or equal','bw'=>'begins with','bn'=>'does not begin with','bt'=>'between','in'=>'is in','ni'=>'is not in','ew'=>'ends with','en'=>'does not end with','cn'=>'contains','nc'=>'does not contain'] 
+                    */
+                    if ($("#LPC").val() != '%') {
+                        my_fld.push({ 
+                            name: "LpcDescription", 
+                            val : $("#LPC").val(), 
+                            oper:"eq"
+                        });
+                    } else {
+                        my_fld.push({ 
+                            name: "LpcDescription", 
+                            val : $("#LPC").val(), 
+                            oper:"ne"
+                        });
+                    }
+                    if ($('#year').val() != '%') {
+                        my_fld.push({
+                            name: "ContactDate",
+                            val : $('#year').val(),
+                            oper: "bw"
+                        });
+                    } else {
+                        my_fld.push({
+                            name: "ContactDate",
+                            val : '-',
+                            oper: "cn"
+                        });
+                    }
+                    if ($('#month').val() != '%') {
+                        my_fld.push({
+                            name: "ContactDate",
+                            val : '-'+$('#month').val().padStart(2,0)+'-',
+                            oper: "cn"
+                        });
+                    } else {
+                        my_fld.push({
+                            name: "ContactDate",
+                            val : '-',
+                            oper: "cn"
+                        });
+                    }
+                    // console.log(my_fld);
+                    var rule = buildCustomSearch( my_fld, "AND");
+                    grid.setGridParam({postData:{filters:rule}, search:true}).trigger("reloadGrid");
                 });
+/***************************************************************************************************************************************/
             });
         </script>
     </head>
@@ -189,7 +253,7 @@
                         <select id="month" name="month">
                             <option value='%'>All</option>
                         </select>
-                        <input id="search" type="button" value="Search"></input>
+                        <input id="do_search" type="button" value="Search"></input>
                     </form>
                     <br />
                 </div>
