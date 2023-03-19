@@ -115,7 +115,20 @@
             }"
         )
     );
+    
+$expandRow = <<<EXPAND
+    setTimeout(function() {
+        groupRows = $('#grid12').find('tr.jqgroup');
+        for (x=0; x< groupRows.length; x++) {
+            if (groupRows[x].id.indexOf('ghead_0_') >= 0) {
+                $('#grid12').jqGrid('groupingToggle', groupRows[x].id);
+                $('#'+groupRows[x].id+' td').first().css('font-weight','bold').css('font-size','large');
+            }
+        }
+    }, 500)
+EXPAND;
     $pivot->callGridMethod("#grid12", "navButtonAdd", $buttonoptions,500);
+    $pivot->setGridEvent('gridComplete',$expandRow);
 
 	$pivot->renderPivot("#grid12","#pager12", true, null, true, true);
 ?>
