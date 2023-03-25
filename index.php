@@ -277,7 +277,7 @@
                 }
             });
             $('#LandOwnerListQuestion').hover(function() {
-                $(this).prop('title',"Landowners that are colored red\nare are Status inactive. Check the\nLand Owner Notes section\nto determine the disposition of\nthe parcel(s) they own(ed)");
+                $(this).prop('title',"Land owners that are colored red are are Status\ninactive. Check the Land Owner Notes section\nto determine the disposition of the parcel(s)\nthey own(ed).\n\nLand owners colored blue are assigned to you.");
             });
             $('#newnoteform').on('submit', function(e) {
                 // console.log(e);

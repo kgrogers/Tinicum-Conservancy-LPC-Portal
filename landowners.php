@@ -4,13 +4,15 @@
         return false;
     }
     $permission = $_POST['permission'];
+    $oMemID = -1;
     switch ($permission) {
         case "root":
             $memberID = 0;
+            $oMemId = (int)$_POST['memberID'];
             break;
         case "lpchead":
             $mLPC = (int)$_SESSION['mLPC'];
-            $memberID = (int)$_POST['memberID'];
+            $oMemID = $memberID = (int)$_POST['memberID'];
             break;
         case "user":
             $memberID = (int)$_POST['memberID'];
@@ -24,6 +26,7 @@
         $sql = "
             select LandOwnerID,
                    LandOwner,
+                   CurrentlyAssignedTo,
                    Status
             from tblLandOwners
             order by LandOwner";
@@ -32,6 +35,7 @@
             $sql = "
                 select distinct lo.LandOwnerID,
                        lo.LandOwner,
+                       CurrentlyAssignedTo,
                        lo.Status
                 from tblLandOwners lo,
                      tblParcels p
@@ -54,8 +58,10 @@
     $rows = $stmt->fetchall(PDO::FETCH_ASSOC);
     $html = "";
     foreach ($rows as $row) {
-        if ($row['Status'] != 4) {
+        if ($row['Status'] != 4 && $row['CurrentlyAssignedTo'] != $oMemId) {
             $html .= "<li class='nav-item'><a class='nav-link' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
+        } elseif ($row['Status'] != 4 && $row['CurrentlyAssignedTo'] == $oMemId) {
+            $html .= "<li class='nav-item'><a class='nav-link text-primary' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
         } elseif ($row['Status'] == 4) {
             $html .= "<li class='nav-item'><a class='nav-link text-danger' href='#' loid=".$row['LandOwnerID'].">".$row['LandOwner']."</a></li>";
         }
