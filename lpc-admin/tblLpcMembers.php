@@ -112,9 +112,9 @@ $grid3->toolbarfilter = true;
 // Enable operation search
 $grid3->setFilterOptions(array("searchOperators"=>true));
 
-$grid3->setSelect("LPC", "select LpcID,LpcDescription from tblLpcType order by 2", false, true, false);
-$grid3->setSelect("MemberInactive", array(0=>'Active',1=>'Inactive'), false, true, false);
-$grid3->setSelect("permission", array('user'=>'user','lpchead'=>'lpchead','root'=>'root'), false, true, false);
+$grid3->setSelect("LPC", "select LpcID,LpcDescription from tblLpcType order by 2", false, true, true, array(""=>""));
+$grid3->setSelect("MemberInactive", array(0=>'Active',1=>'Inactive'), false, true, true, array(""=>""));
+$grid3->setSelect("permission", array('user'=>'user','lpchead'=>'lpchead','root'=>'root'), false, true, true, array(""=>""));
 
 $grid3->navigator = true;
 $grid3->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>true,"view"=>true, "search"=>true, "cloneToTop"=>true));

@@ -97,7 +97,7 @@ $grid2->setFilterOptions(array("searchOperators"=>true));
 /* TODO
     1. Check Add form before submit and make sure LandOwner field isn't a duplicate.
 */
-$grid2->setSelect("Status", "SELECT StatusID, Status as CM FROM tblLandOwnerStatus ORDER BY 2", false, true, false, array(""=>""));
+$grid2->setSelect("Status", "SELECT StatusID, Status FROM tblLandOwnerStatus ORDER BY 2", false, true, true, array(""=>""));
 $sql = "
     select o.LpcMemberID,
            concat('(',t.LPC,') ',o.FirstName,' ',o.LastName) LpcMember
@@ -106,8 +106,8 @@ $sql = "
     where o.MemberInactive = 0 and
           o.LPC = t.LpcID
     ORDER BY o.LastName";
-$grid2->setSelect("CurrentlyAssignedTo", $sql, false, true, false, array(""=>""));
-$grid2->setSelect("LandOwnerState","select PO, State from tblStates order by 2",false,true,false);
+$grid2->setSelect("CurrentlyAssignedTo", $sql, false, true, true, array(""=>""));
+$grid2->setSelect("LandOwnerState","select PO, State from tblStates order by 2",false,true,true,array(""=>""));
 $grid2->navigator = true;
 $grid2->setNavOptions('navigator', array("excel"=>false,"add"=>true,"edit"=>true,"del"=>false,"view"=>true, "search"=>true, "cloneToTop"=>true));
 $grid2->setNavOptions('edit',array("height"=>"auto","dataheight"=>"auto","width"=>700,"closeAfterEdit"=>true));
