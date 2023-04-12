@@ -29,7 +29,11 @@ $grid2->SelectCommand = "
            lo.LandOwnerZip,
            lo.HowToContact,
            lo.MailingSalutation,
-           lo.AddressedTo
+           lo.AddressedTo,
+           lo.LastName1,
+           lo.FirstName1,
+           lo.LastName2,
+           lo.FirstName2
     from tblLandOwners lo,
          tblLpcMembers lm,
          tblLandOwnerStatus ls,
